@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="TechParamsCalc.UserControls.ServerSynchronizationUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TechParamsCalc.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="7" Width="auto" Height="auto">
+            <Button x:Name="SaveButton"  Grid.Row="0" Grid.Column="1" Width="25" Height="25"  Foreground="#DD0E0101" BorderBrush="#FFE0D6D6" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,5,5,5" Click="SaveButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/TechParamsCalc;component/Source/save.png"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+
+
+        <Label x:Name="ServerSyncDescription" Content="Servers Synchronyzation Settings" Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2" Foreground="#FF11020A" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" />
+
+        <Label x:Name="ServerSyncRole" Content="Server Role" Grid.Row="1"       Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <TextBox x:Name="ServerSyncRoleTextBox"                        Grid.Row="1" Grid.Column="1" Height="30" Width="190" HorizontalAlignment="Left" FontSize="15" IsReadOnly="True" />
+
+        <Label x:Name="ServerSyncPollingTimes" Content="Sync polling Times" Grid.Row="2" Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <TextBox x:Name="ServerSyncPollingTimesTextBox"                            Grid.Row="2" Grid.Column="1" Height="30" Width="190" HorizontalAlignment="Left" FontSize="15" />
+
+        <Label x:Name="ServerSyncWritingStatus" Content="Server Writing Status" Grid.Row="3" Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <Rectangle x:Name ="ServerSyncWritingRectangle" Grid.Column="1" Grid.Row="3" Width="25" Height="25" Fill="#FFE61212" HorizontalAlignment="Left"   />
+
+        <Label x:Name="ServerSyncWritingTag" Content="Server Sync Writing Tag" Grid.Row="4" Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <TextBox x:Name="ServerSyncWritingTagTextBox"                          Grid.Row="4" Grid.Column="1" Height="30" Width="190" HorizontalAlignment="Left" FontSize="15" TextChanged="ServerSyncWritingTagTextBox_TextChanged" />
+
+        <Label x:Name="AtmoPressureTag" Content="Atmo pressure Tag" Grid.Row="5" Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <TextBox x:Name="AtmoPressureTagTextBox"                    Grid.Row="5" Grid.Column="1" Height="30" Width="190" HorizontalAlignment="Left" FontSize="14" TextChanged="AtmoPressureTagTextBox_TextChanged" />
+
+        <Label x:Name="OtherTagsNamesLabel" Content="Tags For Reading" Grid.Row="6" Grid.Column="0" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="19"/>
+        <TextBox x:Name="OtherTagsNamesTextBlock" Grid.Row="6" Grid.Column="1" AcceptsReturn="True" />
+
+    </Grid>
+</UserControl>

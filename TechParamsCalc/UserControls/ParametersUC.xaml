@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="TechParamsCalc.UserControls.ParametersUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TechParamsCalc.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.06*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel x:Name ="ParameterFilterPanel" Grid.Row="0" Orientation="Horizontal">
+            <Label Content="Search by Name: " FontWeight="Bold"/>
+            <TextBox Width="150" DockPanel.Dock="Left">                
+            </TextBox>
+            <Label Content="Atmo Pressure: " FontWeight="Bold"/>
+            <Label x:Name="AtmoPressureLabel" Content="x.xxxx"/>
+            <Label Content="bar"/>
+
+
+        </StackPanel>
+
+        <Grid x:Name="ParameterGrid" Grid.Row="1">
+            <TabControl Width="auto" Margin="0,0,10,0">
+                <TabItem Header="Capacities">
+                    <DataGrid x:Name="CapacityGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"  RowBackground="LightGray" AlternatingRowBackground="White">                       
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=Id}" Width="50" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Tag" Binding="{Binding Path=TagName}" Width="110" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridCheckBoxColumn Header="Writable" Binding="{Binding Path=IsWriteble}" Width="80" IsReadOnly="true" Selector.IsSelected="False"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Path=ValCalc}" Width="70" IsReadOnly="true" Selector.IsSelected="False"/>                            
+                            <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="400" IsReadOnly="true" Selector.IsSelected="False" />
+                            <!--<DataGridTextColumn Header="Content" Binding="{Binding Path=PercDescription[0]}" Width="200" IsReadOnly="true" Selector.IsSelected="False" />-->
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </TabItem>
+                <TabItem Header="Densities">
+                    <DataGrid x:Name="DensityGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"  RowBackground="LightGray" AlternatingRowBackground="White">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=Id}" Width="50" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Tag" Binding="{Binding Path=TagName}" Width="110" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridCheckBoxColumn Header="Writable" Binding="{Binding Path=IsWriteble}" Width="80" IsReadOnly="true" Selector.IsSelected="False"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Path=ValCalc}" Width="70" IsReadOnly="true" Selector.IsSelected="False"/>                            
+                            <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="200" IsReadOnly="true" Selector.IsSelected="False" />
+                            <!--<DataGridTextColumn Header="Content" Binding="{Binding Path=PercDescription[0]}" Width="200" IsReadOnly="true" Selector.IsSelected="False" />-->
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+
+                <TabItem Header="Contents">
+                    <DataGrid x:Name="ContentGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"  RowBackground="LightGray" AlternatingRowBackground="White">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=Id}" Width="50" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Tag" Binding="{Binding Path=TagName}" Width="110" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridCheckBoxColumn Header="Writable" Binding="{Binding Path=IsWriteble}" Width="80" IsReadOnly="true" Selector.IsSelected="False"/>
+                            <!--<DataGridTextColumn Header="Value" Binding="{Binding Path=ValCalc[0]}" Width="70" IsReadOnly="true" Selector.IsSelected="False"/>-->                            
+                            <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" Width="200" IsReadOnly="true" Selector.IsSelected="False" />
+
+                            <DataGridTextColumn Header="Comp1" Binding="{Binding Path=PercDescription[0]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Value1" Binding="{Binding Path=ValCalc[0]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            
+                            <DataGridTextColumn Header="Comp2" Binding="{Binding Path=PercDescription[1]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Value1" Binding="{Binding Path=ValCalc[1]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+
+                            <DataGridTextColumn Header="Comp3" Binding="{Binding Path=PercDescription[2]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Value1" Binding="{Binding Path=ValCalc[2]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+
+                            <DataGridTextColumn Header="Comp4" Binding="{Binding Path=PercDescription[3]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Value1" Binding="{Binding Path=ValCalc[3]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            
+                            <DataGridTextColumn Header="Comp5" Binding="{Binding Path=PercDescription[4]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+                            <DataGridTextColumn Header="Value1" Binding="{Binding Path=ValCalc[4]}" Width="75" IsReadOnly="true" Selector.IsSelected="False" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+
+        </Grid>
+    </Grid>
+
+</UserControl>

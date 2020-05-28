@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TechParamsCalc.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SQLDataBase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TechCalc</Value>
+    </Setting>
+    <Setting Name="SQLServerDataBase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TechCalc</Value>
+    </Setting>
+    <Setting Name="SQLServerLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Al</Value>
+    </Setting>
+    <Setting Name="SQLServerPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">kip12</Value>
+    </Setting>
+    <Setting Name="SQLServerPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5432</Value>
+    </Setting>
+    <Setting Name="OPCServerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Schneider-Aut.OFS.2</Value>
+    </Setting>
+    <Setting Name="OPCServerSubString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KNH_PO!</Value>
+    </Setting>
+    <Setting Name="ServerSyncWryteTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EDS01_EXTERNAL_EXCHANGE</Value>
+    </Setting>
+    <Setting Name="AtmoPressureTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S11_METEO_10</Value>
+    </Setting>
+    <Setting Name="ServerSyncWriteTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EDS01_EXTERNAL_EXCHANGE</Value>
+    </Setting>
+    <Setting Name="SQLServerAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.3.5</Value>
+    </Setting>
+    <Setting Name="OtherTagsFromOPC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S11_P05_FC08,S11_A01_FC02</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
