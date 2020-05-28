@@ -101,11 +101,14 @@
     <Compile Include="Controllers\AdditionalCalculator.cs" />
     <Compile Include="Controllers\ControllerParameters.cs" />
     <Compile Include="Controllers\CustomEventArgs.cs" />
+    <Compile Include="DataBaseConnection\Level\Tank.cs" />
+    <Compile Include="DataBaseConnection\Level\TankContent.cs" />
     <Compile Include="DataBaseConnection\ServerConnections\HostRole.cs" />
     <Compile Include="DataBaseConnection\ServerConnections\AuthorizedHost.cs" />
     <Compile Include="Factory\ContentCreator.cs" />
     <Compile Include="Factory\DensityCreator.cs" />
     <Compile Include="Factory\SingleTagCreator.cs" />
+    <Compile Include="Parameters\LevelTank.cs" />
     <Compile Include="TestPlaceHolder.cs" />
     <Compile Include="UserControls\LogUC.xaml.cs">
       <DependentUpon>LogUC.xaml</DependentUpon>

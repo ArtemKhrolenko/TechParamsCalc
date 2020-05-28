@@ -52,7 +52,7 @@ namespace TechParamsCalc.Controllers
         private ControllerParameters controllerParameters;
 
         private HostRole controllerRole;    //Primary Server, Secondary Server, Client
-        private int pollingPeriod = 2000;        
+        private int pollingPeriod = 2000;
         public bool IsInstanceActive { get; set; } //Маркер, сигнализирующий о том, пишет ли данный экземлпяр программы в PLC или находится в режиме StandAlone
 
         public string[] SingleTagsNamesForRW { get; private set; }
@@ -87,8 +87,8 @@ namespace TechParamsCalc.Controllers
             //5.0. ContentCreator
             contentCreator = new ContentCreator(opcClient, singleTagCreator);
 
-            
-            
+
+
             //parameterClaculatedSucceedEvent += (o, ea) => CheckForItemInPlcForWritingToPLC(o, (CustomEventArgs)ea);
 
             //Запускаем процесс проверки изменения тега в PLC для определения разрешения записи данному экземпляру программы в PLC
@@ -123,6 +123,28 @@ namespace TechParamsCalc.Controllers
         //Метод для создания и инициализации параметров из OPC 
         internal bool InitializeParameters()
         {
+
+
+            using (DBPGContext dbcontext = new DBPGContext())
+            {
+                //    //var result = from tc in dbcontext.tankContents
+                //    //             join t in dbcontext.tanks on tc.tankId equals t.id
+                //    //             select new LevelTank { Id = tc.id, Tank = t };
+
+
+
+                //Раскоментить это и получить кол-во записей в таблице
+                var result = from t in dbcontext.tanks
+                             select t;
+
+                int red = result.Count();
+
+            }
+
+
+
+
+
 
             bool isiInitSuccess = true;
 
@@ -358,7 +380,7 @@ namespace TechParamsCalc.Controllers
                 try
                 {
                     temperatureCreator.UpdateItemListFromOpc();
-                    pressureCreator.UpdateItemListFromOpc();                                
+                    pressureCreator.UpdateItemListFromOpc();
                     singleTagCreator.UpdateItemListFromOpc();
 
                     //Capacity calculation
@@ -378,7 +400,7 @@ namespace TechParamsCalc.Controllers
                         if (!item.IsInValid)
                         {
                             item.CalculateDensity();
-                        }                        
+                        }
                     }
 
                     //Content calculation     
@@ -425,7 +447,7 @@ namespace TechParamsCalc.Controllers
                 //Если инстанс программы - Primary - записывает Primary
                 //Если инстанс программы - Secondary и статус записи Primary не изменяется - записывает Secondary               
                 IsInstanceActive = (controllerRole == HostRole.PRIMARY_SERVER && isServerPrimaryFlipping || (controllerRole == HostRole.SECONDARY_SERVER && !isServerPrimaryFlipping && isServerSecondaryFlipping)) && controllerParameters.isEnableWriting;
-                
+
                 //6.7 Записываем singleTag - оба сервера пишут
                 switch (controllerRole)
                 {
@@ -461,7 +483,7 @@ namespace TechParamsCalc.Controllers
 
                         //5.7 Записываем Contents в OPC
                         contentCreator.WriteItemToOPC();
-                        
+
                         //5.8 Записываем асинхронные данные для тегов (то, что может писать только один инстанс)
                         (singleTagCreator as SingleTagCreator).WriteASyncItemToOPC();
                     }

@@ -26,6 +26,10 @@ namespace TechParamsCalc.DataBaseConnection
         public DbSet<Density.DensityContent> densityDescs { get; set; }
         public DbSet<Content.ContentContent> contentDescs { get; set; }
         public DbSet<ServerConnections.AuthorizedHost> contentAutorizedServers { get; set; }
+        public DbSet<Level.Tank> tanks { get; set; }
+        public DbSet<Level.TankContent> tankContents { get; set; }
+
+
 
     }
 }
