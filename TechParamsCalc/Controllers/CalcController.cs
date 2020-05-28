@@ -15,7 +15,7 @@ using TechParamsCalc.DataBaseConnection.ServerConnections;
 using System.Windows;
 
 
-
+//Main Calculation Controller
 
 namespace TechParamsCalc.Controllers
 {
