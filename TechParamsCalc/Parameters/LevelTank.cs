@@ -7,9 +7,17 @@ using TechParamsCalc.DataBaseConnection.Level;
 
 namespace TechParamsCalc.Parameters
 {
-    class LevelTank
+    internal class LevelTank : Characteristic
     {
-        public int Id { get; set; }
         public Tank Tank { get; set; }
+        public double Volume {get;set;}
+        public Level Level { get; set; }
+        public Density Density { get; set; }
+
+        public double CalculateTankVolume()
+        {
+            Volume = Tank.GetVolume();
+            return Volume;
+        }
     }
 }

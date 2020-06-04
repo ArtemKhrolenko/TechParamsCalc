@@ -15,13 +15,13 @@ namespace TechParamsCalc.DataBaseConnection
         public DBPGContext() : base(nameOrConnectionString: "Default") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {            
+        {
             modelBuilder.HasDefaultSchema("public");
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>(); //Убирает добавление буквы s в конец названия таблицы
             base.OnModelCreating(modelBuilder);
         }
-        
-        
+
+
         public DbSet<Capacity.CapacityContent> capacityDescs { get; set; }        
         public DbSet<Density.DensityContent> densityDescs { get; set; }
         public DbSet<Content.ContentContent> contentDescs { get; set; }

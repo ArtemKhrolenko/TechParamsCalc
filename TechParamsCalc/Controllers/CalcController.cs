@@ -28,9 +28,11 @@ namespace TechParamsCalc.Controllers
         internal ItemsCreator capacityCreator;
         internal ItemsCreator densityCreator;
         internal ItemsCreator contentCreator;
+        internal ItemsCreator levelTankCreator;
 
         internal ItemsCreator temperatureCreator;
         internal ItemsCreator pressureCreator;
+        internal ItemsCreator levelCreator;
         internal ItemsCreator singleTagCreator;
 
         public event EventHandler parameterClaculatedSucceedEvent;
@@ -80,12 +82,17 @@ namespace TechParamsCalc.Controllers
             temperatureCreator = new TemperatureCreator(opcClient);
             //2.0. PressureCreator
             pressureCreator = new PressureCreator(opcClient);
+
+            //
+            levelCreator = new LevelCreator(opcClient);
             //3.0. CapacityCreator
             capacityCreator = new CapacityCreator(opcClient, singleTagCreator);
             //4.0. DensityCreator
             densityCreator = new DensityCreator(opcClient, singleTagCreator);
             //5.0. ContentCreator
             contentCreator = new ContentCreator(opcClient, singleTagCreator);
+            //6.0. ContentCreator
+            levelTankCreator = new LevelTankCreator(opcClient, singleTagCreator);
 
 
 
@@ -123,28 +130,6 @@ namespace TechParamsCalc.Controllers
         //Метод для создания и инициализации параметров из OPC 
         internal bool InitializeParameters()
         {
-
-
-            using (DBPGContext dbcontext = new DBPGContext())
-            {
-                //    //var result = from tc in dbcontext.tankContents
-                //    //             join t in dbcontext.tanks on tc.tankId equals t.id
-                //    //             select new LevelTank { Id = tc.id, Tank = t };
-
-
-
-                //Раскоментить это и получить кол-во записей в таблице
-                var result = from t in dbcontext.tanks
-                             select t;
-
-                int red = result.Count();
-
-            }
-
-
-
-
-
 
             bool isiInitSuccess = true;
 
@@ -215,6 +200,27 @@ namespace TechParamsCalc.Controllers
                 isiInitSuccess = false;
             }
 
+            #endregion
+
+            #region Levels
+            //1.1. Пустой список переменных Level (strings с наименованием тегов)
+            levelCreator.CreateItemList();
+
+            //1.2. Формируем группы чтения для OPC-сервера
+            levelCreator.CreateOPCReadGroup();
+
+            //1.3. Обновленный данными из OPC список переменных Temperature
+            try
+            {
+                levelCreator.UpdateItemListFromOpc();
+                errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "Levels - ok" });
+            }
+            catch (Exception e)
+            {
+                if (errorRaisedEvent != null)
+                    errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "Level OPC reading error" + $" {e.Message }" });
+                isiInitSuccess = false;
+            }
             #endregion
 
             #region 3. Capacities            
@@ -352,6 +358,50 @@ namespace TechParamsCalc.Controllers
 
             #endregion
 
+            #region 6. LevelTanks
+            //6.1. Пустой список переменных LevelTank (список string с именами тегов)
+            levelTankCreator.CreateItemList();
+
+            //6.2. Формируем группы чтения для OPC-сервера
+            levelTankCreator.CreateOPCReadGroup();
+
+            //6.3.Обновленный данными из OPC список переменных LevelTank
+            try
+            {
+                //levelTankCreator.UpdateItemListFromOpc();
+                errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "LevelsTank - ok" });
+            }
+            catch (Exception e)
+            {
+                if (errorRaisedEvent != null)
+                    errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "LevelsTank OPC reading error" + $" {e.Message }" });
+                isiInitSuccess = false;
+            }
+
+
+            //6.4. Обновленный данными из DB список переменных LevelTank
+            try
+            {
+                using (DBPGContext dbcontext = new DBPGContext())
+                {
+                    (levelTankCreator as LevelTankCreator).UpdateItemListFromDB((levelCreator as LevelCreator).LevelList, (densityCreator as DensityCreator).DensityList, dbcontext); //Заполененный данными из DB список переменных                
+                }
+            }
+            catch (Exception e)
+            {
+                if (errorRaisedEvent != null)
+                    errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "Error in DB Density" + $" {e.Message }" });
+                isiInitSuccess = false;
+            }
+
+            //6.5. Формируем группы записи для OPC-сервера
+           levelTankCreator.CreateOPCWriteGroup();
+
+            //6.6. Сообщаемм MainWindow о том, что LevelTanks сформировались и ими можно наполнять ComboBox в ParametersUC
+            //if (densitiesReadyEvent != null)
+            //    densitiesReadyEvent.Invoke(this, new EventArgs());
+
+            #endregion
 
 
             //Сообщаемм MainWindow о том, что все расчетные параметры сформированы
@@ -410,6 +460,17 @@ namespace TechParamsCalc.Controllers
                         if (!item.IsInValid)
                         {
                             item.CalculateContent();
+                        }
+                    }
+
+                    //LevelTank calculation     
+                    //levelTankCreator.UpdateItemListFromOpc();
+                    levelCreator.UpdateItemListFromOpc();
+                    foreach (var item in (levelTankCreator as LevelTankCreator).LevelTankList)
+                    {
+                        if (!item.IsInValid)
+                        {
+                            item.CalculateTankVolume();
                         }
                     }
 
@@ -484,7 +545,10 @@ namespace TechParamsCalc.Controllers
                         //5.7 Записываем Contents в OPC
                         contentCreator.WriteItemToOPC();
 
-                        //5.8 Записываем асинхронные данные для тегов (то, что может писать только один инстанс)
+                        //5.8 Записываем LevelTanks в OPC
+                        levelTankCreator.WriteItemToOPC();
+
+                        //5.9 Записываем асинхронные данные для тегов (то, что может писать только один инстанс)
                         (singleTagCreator as SingleTagCreator).WriteASyncItemToOPC();
                     }
                     catch (Exception)

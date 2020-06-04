@@ -107,7 +107,10 @@
     <Compile Include="DataBaseConnection\ServerConnections\AuthorizedHost.cs" />
     <Compile Include="Factory\ContentCreator.cs" />
     <Compile Include="Factory\DensityCreator.cs" />
+    <Compile Include="Factory\LevelCreator.cs" />
+    <Compile Include="Factory\LevelTankCreator.cs" />
     <Compile Include="Factory\SingleTagCreator.cs" />
+    <Compile Include="Parameters\Level.cs" />
     <Compile Include="Parameters\LevelTank.cs" />
     <Compile Include="TestPlaceHolder.cs" />
     <Compile Include="UserControls\LogUC.xaml.cs">
