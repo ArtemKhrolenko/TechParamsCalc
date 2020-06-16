@@ -27,7 +27,7 @@ namespace TechParamsCalc.Parameters
             get
             {
                 if (Density != null && Density.ValCalc > 0)                
-                    return Volume * Density.ValCalc * 0.0001;
+                    return Volume * Density.ValHmi * 0.0001;
                 else return 0;
             }
         }      
