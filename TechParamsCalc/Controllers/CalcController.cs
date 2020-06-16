@@ -390,7 +390,7 @@ namespace TechParamsCalc.Controllers
             catch (Exception e)
             {
                 if (errorRaisedEvent != null)
-                    errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "Error in DB Density" + $" {e.Message }" });
+                    errorRaisedEvent.Invoke(this, new CustomEventArgs { ErrorMessage = "Error in DB Level" + $" {e.Message }" });
                 isiInitSuccess = false;
             }
 

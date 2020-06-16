@@ -41,16 +41,17 @@ namespace TechParamsCalc.Parameters
                 try
                 {
 
-                    if (TagName == "S11_T01_QC06_CONT" || TagName == "S11_T01_QC05_CONT")
-                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 3); //Содержание воды в смеси 0%
+                    //Содержанеия по колонне 1.Т01 считаются по паре ACN-PO, формулы выданы Алексеем Зинченко 12.06.2020. Воду принимаем равную 0!
+                    //if (TagName == "S11_T01_QC06_CONT" || TagName == "S11_T01_QC05_CONT")
+                    //    _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 3); //Содержание воды в смеси 0%
 
-                    else if (TagName == "S11_T01_QC04_CONT" || TagName == "S11_T01_QC03_CONT")
-                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 2); //Содержание воды в смеси 16%
+                    //else if (TagName == "S11_T01_QC04_CONT" || TagName == "S11_T01_QC03_CONT")
+                    //    _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 2); //Содержание воды в смеси 16%
 
-                    else if (TagName == "S11_T01_QC02_CONT" || TagName == "S11_T01_QC01_CONT")
-                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 1); ////Содержание воды в смеси 18%
+                    //else if (TagName == "S11_T01_QC02_CONT" || TagName == "S11_T01_QC01_CONT")
+                    //    _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 1); ////Содержание воды в смеси 18%
 
-                    else
+                    //else
                         _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 0); //Pressure + deltaP 1bar (abs/relative)
                 }
                 catch (Exception)

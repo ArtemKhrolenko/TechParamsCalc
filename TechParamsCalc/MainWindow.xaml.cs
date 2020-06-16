@@ -268,6 +268,7 @@ namespace TechParamsCalc
                 parametersUC.CapacityGrid.ItemsSource = (controller.capacityCreator as CapacityCreator).CapacityList;
                 parametersUC.DensityGrid.ItemsSource = (controller.densityCreator as DensityCreator).DensityList;
                 parametersUC.ContentGrid.ItemsSource = (controller.contentCreator as ContentCreator).ContentList;
+                parametersUC.TankGrid.ItemsSource = (controller.levelTankCreator as LevelTankCreator).LevelTankList;
 
             })
                           );

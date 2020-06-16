@@ -19,6 +19,7 @@ namespace TechParamsCalc.Factory
         public short IsWritableTagToPLC { get; set; }  //Слово, которое сигнализирует о том, что в OPC идет запись
         public short PropyleneMass { get; set; }    //Расчетная масса пропилена для расчта задания расхода на Т02
         public short DeltaPE06 { get; set; }    //Расчетный перепад давления в 1.E06 после теплообменника 1.E23
+        public short DeltaPR01 { get; set; } //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
 
         #endregion
 
@@ -33,6 +34,7 @@ namespace TechParamsCalc.Factory
 
         public float averReactFlow { get; set; } //Расход реакционной смеси от А01 для расчета расхода пропилена на А02
         public float AcnWaterMassFlow { get; set; } //РАсхо массовый ACN с водой из D02
+        public float S11_R01_TT01_SP { get; set; } //Задание температуры в реакторе 1.R01
         #endregion
 
         //группа для записи переменных, которые должны писаться одновременно двумя серверами
@@ -82,9 +84,16 @@ namespace TechParamsCalc.Factory
                 IsActive = true
             };
 
+            //Задание температуры в реакторе 1.R01 для расчета дельты к заданию давления реакции (см. AdditionalCalculator класс)
+            var definition5 = new OpcDaItemDefinition
+            {
+                ItemId = opcClient.ParentNodeDescriptor + "S11_R01_TT01_SP",
+                IsActive = true
+            };
+
             dataGroupRead = opcClient.OpcServer.AddGroup("SingleTagGroupRead");                               //Группа переменных для чтения (записи) из OPC-сервера 
             dataGroupRead.IsActive = true;
-            OpcDaItemResult[] results = dataGroupRead.AddItems(new OpcDaItemDefinition[] { definition, definition2, definition3, definition4 });     //Добавление переменных в группу             
+            OpcDaItemResult[] results = dataGroupRead.AddItems(new OpcDaItemDefinition[] { definition, definition2, definition3, definition4, definition5 });     //Добавление переменных в группу             
 
         }
 
@@ -144,6 +153,17 @@ namespace TechParamsCalc.Factory
             {
 
             }
+
+            // Задание температуры в реакторе 1.R01 для расчета дельты к заданию давления реакции (см. AdditionalCalculator класс)
+            try
+            {
+                if (singleValues[4].Value != null)
+                    S11_R01_TT01_SP = (short)(singleValues[4].Value) * 0.1f;
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
 
@@ -182,9 +202,16 @@ namespace TechParamsCalc.Factory
                 IsActive = true
             };
 
+            //Расчетная дельта к заданию давления реакции (см. AdditionalCalculator класс)
+            var definition4 = new OpcDaItemDefinition
+            {
+                ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[22]",
+                IsActive = true
+            };
+
             dataGroupWrite = opcClient.OpcServer.AddGroup("SingleTagAsynchroGroupWrite");          //Группа переменных для разразненной записи в  OPC  
             dataGroupWrite.IsActive = true;
-            results = dataGroupWrite.AddItems(new OpcDaItemDefinition[] { definition2, definition3 });
+            results = dataGroupWrite.AddItems(new OpcDaItemDefinition[] { definition2, definition3, definition4 });
             valuesForWriting = new object[results.Count()];
         }
 
@@ -204,6 +231,7 @@ namespace TechParamsCalc.Factory
         {
             valuesForWriting[0] = PropyleneMass;
             valuesForWriting[1] = DeltaPE06;
+            valuesForWriting[2] = DeltaPR01;
             //........Добавить при необходимости
 
             if (opcClient.OpcServer.IsConnected)

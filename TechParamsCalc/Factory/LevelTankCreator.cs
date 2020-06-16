@@ -50,7 +50,7 @@ namespace TechParamsCalc.Factory
             //Создаем список анонимных объектов 
             var collection = (from tc in dbContext.tankContents
                               join t in dbContext.tanks on tc.tankId equals t.id
-                              select new { Id = tc.id, TagName = tc.tankVarDef, Tank = t }).ToList();
+                              select new { Id = tc.id, TagName = tc.tankVarDef, Tank = t, tc.distanceA , tc.distanceB, tc.probeLength, tc.distToDistanceA }).ToList();
 
             //Создаем список LevelTank, параллельно инициализируем его переменными Level
             LevelTankList = new List<LevelTank>();
@@ -61,9 +61,17 @@ namespace TechParamsCalc.Factory
 
                 if (level != null && density != null && nodeElementCollection.Any(ne => ne.Name == x.TagName))
                 {
-                    LevelTankList.Add(new LevelTank { Id = x.Id, TagName = x.TagName, Tank = x.Tank, Level = level, Density = density, IsWriteble = true });
+                    LevelTankList.Add(new LevelTank { Id = x.Id, TagName = x.TagName, Tank = x.Tank, Level = level, Density = density, 
+                                                        DistanceA = x.distanceA, DistanceB = x.distanceB, ProbeLength = x.probeLength, 
+                                                        DistToDistanceA = x.distToDistanceA, IsWriteble = true });
                 }
 
+            });
+
+            //Инициализация объектов Tank значениями из LevelTank (distA, distB, LtoDistA)
+            LevelTankList.ForEach((lt) =>
+            {
+                lt.Tank.InitalizeTank(lt.DistToDistanceA, lt.DistanceA, lt.DistanceB);
             });
         }
 
@@ -90,13 +98,12 @@ namespace TechParamsCalc.Factory
             {
                 if (item.IsWriteble)
                 {
-                    valuesForWriting[i++] = -10;
-                    valuesForWriting[i++] = (short)item.Level.Val_R * 10;
-                    valuesForWriting[i++] = (short)item.Volume * 10;
-                    valuesForWriting[i++] = -20;
+                    valuesForWriting[i++] = (short)(item.DistanceB - item.DistanceA);
+                    valuesForWriting[i++] = (short)item.LevelMm;
+                    valuesForWriting[i++] = (short)(item.Volume * 1000);
+                    valuesForWriting[i++] = (short)(item.Mass * 1000);
 
                 }
-
             }
 
             if (opcClient.OpcServer.IsConnected)

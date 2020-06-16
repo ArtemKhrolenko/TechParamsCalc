@@ -18,6 +18,8 @@ namespace TechParamsCalc.Controllers
         ContentCreator contentCreator;
         SingleTagCreator singleTagCreator;
 
+        private bool isInitPropyleneSuccess;
+        private bool isInitDeltaPSuccess;
 
 
         internal AdditionalCalculator(ItemsCreator temperatureCreator, ItemsCreator pressureCreator, ItemsCreator densityCreator, ItemsCreator capacityCreator, ItemsCreator contentCreator, ItemsCreator singleTagCreator)
@@ -31,11 +33,10 @@ namespace TechParamsCalc.Controllers
 
             //Инициализируем раччет по расходу пропилена
             isInitPropyleneSuccess = InitalizePropyleneCalculations();
+            isInitDeltaPSuccess = InitalizeDeltaPCalculations();
         }
 
         #region Расчет массы пропилена в 1й реакционной смеси (22.05.2020)
-        private bool isInitPropyleneSuccess;
-
 
         private Density acnWaterDensity;
         private Density tempDensity;
@@ -126,19 +127,20 @@ namespace TechParamsCalc.Controllers
         }
         #endregion
 
-        #region Расчет дельты к заданному давлению в 1.E06 по ТТ и PT после теплообменника 1.E32
-        Pressure S11_P05_PT01;
+        #region Расчет дельты к заданному давлению в 1.E06 и дельты к заданному давлению реакции
+        //Для дельты к заданному давлению в 1.E06
+        Pressure S11_A01_PT01;
         Temperature S11_P05_TT01;
-        float _pt, _tt;
-        internal void CalculateDeltaPE06()
+
+        //Для дельты к заданному давлению реакции
+        Pressure S11_P05_PT01;        
+        
+
+
+        internal double CalculateDeltaP(float _tt, float _pt)
         {
-
-            if (!InitalizeDeltaPE06Calculations())
-            {
-                singleTagCreator.DeltaPE06 = 5;
-                return;
-
-            }
+            _pt = Math.Max(15.0f, Math.Min(_pt, 20.0f));
+            _tt = Math.Max(33.0f, Math.Min(_tt, 90.0f));
 
             List<double> pressureList = new List<double> { 15.0, 16.0, 17.0, 18.0, 19.0, 20.0 }; //7
             List<CoefSet> coefListPressure = new List<CoefSet>();  //Для давлений
@@ -165,23 +167,14 @@ namespace TechParamsCalc.Controllers
             else if (numOfRange == 0)
             {
                 //Считаем по формуле №0               
-                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[0]);
-                //01.04.2020 - Считаем по коэффициенту наклона прямой вниз влево
-                //var y1 = ContentCalc.getPolynomValue(S11_P05_TT01.Val_R, coefListPressure[0]);
-                //var y2 = ContentCalc.getPolynomValue(S11_P05_TT01.Val_R, coefListPressure[1]);
-                //delta = y1 - (y2 - Math.Abs(y1)) * (pressureList[0] - S11_P05_PT01.Val_R) / (pressureList[1] - pressureList[0]);
+                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[0]);                
             }
 
             //Если переданное давление - больше максимального в массиве - 
             else if (numOfRange == pressureList.Count)
             {
                 //Считаем по формуле №pressureList.Count - 1
-                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[pressureList.Count - 1]);
-
-                //01.04.2020 - Считаем по коэффициенту наклона прямой вниз влево
-                //var y1 = ContentCalc.getPolynomValue(S11_P05_TT01.Val_R, coefListPressure[pressureList.Count - 2]);
-                //var y2 = ContentCalc.getPolynomValue(S11_P05_TT01.Val_R, coefListPressure[pressureList.Count - 1]);
-                //delta = y2 + (y2 - Math.Abs(y1)) * (S11_P05_TT01.Val_R - pressureList[pressureList.Count - 1]) / (pressureList[pressureList.Count - 1] - pressureList[pressureList.Count - 2]);
+                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[pressureList.Count - 1]);                
             }
 
 
@@ -192,23 +185,20 @@ namespace TechParamsCalc.Controllers
                 double tmpcount_2 = ContentCalc.getPolynomValue(_tt, coefListPressure[numOfRange]);
                 delta = tmpcount_1 + (tmpcount_2 - tmpcount_1) * deviation;
             }
-
-            singleTagCreator.DeltaPE06 = Math.Max((short)0, (short)(delta * 100.0));
-
+            
+            return Math.Max(0, delta);
 
         }
-        private bool InitalizeDeltaPE06Calculations()
+        private bool InitalizeDeltaPCalculations()
         {
-            S11_P05_PT01 = pressureCreator.PressureList.FirstOrDefault(p => p.TagName == "S11_P05_PT01");
+            //Delta E06
+            S11_A01_PT01 = pressureCreator.PressureList.FirstOrDefault(p => p.TagName == "S11_A01_PT01");
             S11_P05_TT01 = temperatureCreator.TemperatureList.FirstOrDefault(t => t.TagName == "S11_P05_TT01");
-            _pt = Math.Max(15.0f, Math.Min(S11_P05_PT01.Val_R, 20.0f));
-            _tt = Math.Max(33.0f, Math.Min(S11_P05_TT01.Val_R, 90.0f));
 
+            //Delta R01
+            S11_P05_PT01 = pressureCreator.PressureList.FirstOrDefault(p => p.TagName == "S11_P05_PT01");           
 
-            if (S11_P05_PT01 == null || S11_P05_TT01 == null)
-                return false;
-            else
-                return true;
+            return true;
         }
         #endregion
 
@@ -216,8 +206,19 @@ namespace TechParamsCalc.Controllers
         //Все дополнительные расчеты
         internal void CalculateParameters()
         {
+
             CalculateMassOfPropylene();
-            CalculateDeltaPE06();
+
+            //Расчет дельты к заданному давлению в 1.E06 по ТТ и PT после теплообменника 1.E32           
+
+            singleTagCreator.DeltaPE06 = (short)(CalculateDeltaP(S11_P05_TT01?.Val_R ?? -1, S11_A01_PT01?.Val_R ?? -1) * 100.0);
+
+            //Расчет дельты к заданному давлению реакции по давлению в 1.А01 (S11_P05_PT01) и заданию темп-ры в реакторе 1.R01(S11_R01_TT01_SP)
+            singleTagCreator.DeltaPR01 = (short)( CalculateDeltaP(singleTagCreator.S11_R01_TT01_SP, S11_P05_PT01?.Val_R ?? -1) * 100);
+
+
+
+
         }
     }
 }
