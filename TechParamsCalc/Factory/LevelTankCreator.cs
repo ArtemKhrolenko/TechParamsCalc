@@ -56,7 +56,7 @@ namespace TechParamsCalc.Factory
             LevelTankList = new List<LevelTank>();
             collection.ForEach(x =>
             {
-                var level = levelList.FirstOrDefault(l => l.TagName == x.TagName.Substring(0, x.TagName.IndexOf(subStringTagName)));
+                var level = levelList.FirstOrDefault(l => l.TagName == x.TagName.Substring(0, Math.Max(x.TagName.IndexOf(subStringTagName), 0)));
                 var density = level != null ? densityList.FirstOrDefault(d => d.TagName == level.TagName + "_DENS") : null;
 
                 if (level != null && density != null && nodeElementCollection.Any(ne => ne.Name == x.TagName))
@@ -100,9 +100,8 @@ namespace TechParamsCalc.Factory
                 {
                     valuesForWriting[i++] = (short)(item.DistanceB - item.DistanceA);
                     valuesForWriting[i++] = (short)item.LevelMm;
-                    valuesForWriting[i++] = (short)(item.Volume * 1000);
-                    valuesForWriting[i++] = (short)(item.Mass * 1000);
-
+                    valuesForWriting[i++] = (short)(item.Volume > 32.0 ? item.Volume * 100 : item.Volume * 1000);
+                    valuesForWriting[i++] = (short)(item.Mass > 32.0 ? item.Mass * 100 : item.Mass * 1000);
                 }
             }
 

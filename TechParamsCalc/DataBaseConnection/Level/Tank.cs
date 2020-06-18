@@ -47,6 +47,8 @@ namespace TechParamsCalc.DataBaseConnection.Level
             TankVolumeDictionary.Add(1, (v) => GetTypeOneVolume(v)); //Расчет объема для типа сборника 1
             TankVolumeDictionary.Add(2, (v) => GetTypeTwoVolume(v)); //Расчет объема для типа сборника 2
             TankVolumeDictionary.Add(3, (v) => GetTypeThreeVolume(v)); //Расчет объема для типа сборника 3
+            TankVolumeDictionary.Add(4, (v) => GetTypeFourVolume(v)); //Расчет объема для типа сборника 4
+
 
         }
 
@@ -83,7 +85,7 @@ namespace TechParamsCalc.DataBaseConnection.Level
             var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
 
             //Неучтенный объем жидкости под датчиком уровня
-            var volumeLeft = Math.PI * radius * radius * levelFromSensorToBottomOfTheTank * 0.001 * 0.85; //0.85 - поправка на эллиптическое днище
+            var volumeLeft = Math.PI * radius * radius * levelFromSensorToBottomOfTheTank * 0.001 * 0.8; //0.8 - поправка на эллиптическое днище
 
             //Объем жидкости по датчику уровня
             var volumeLevel = Math.PI * radius * radius * Math.Max(0, levelmm) * 0.001;
@@ -184,6 +186,35 @@ namespace TechParamsCalc.DataBaseConnection.Level
             
             return volumeTotal;
         }
-        #endregion      
+
+        /// <summary>
+        /// Получение объема для типа сборника 4 - сборник-параллелепипед
+        /// </summary>
+        /// <param name="LtoDistanceA"></param>
+        /// <param name="DistanceB"></param>
+        /// <returns></returns>
+        private double GetTypeFourVolume(int levelmm)
+        {
+            
+            //Общая высота сборника, включая два элиптических днища
+            totalLength = dimA;
+
+            //Расстояние до дна сборника для оценки неучтенного объема
+            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+
+            //Неучтенный объем жидкости под датчиком уровня
+            var volumeLeft = dimB * 0.001 * dimC * 0.001 * levelFromSensorToBottomOfTheTank * 0.001;
+
+            //Объем жидкости по датчику уровня
+            var volumeLevel = dimB * 0.001 * dimC * 0.001 * Math.Max(0, levelmm) * 0.001;
+
+            //Общий объем сборника по датчику уровня, включая неучтенный остаток
+            var totalVolume = volumeLevel + Math.Max(0, volumeLeft);
+
+            return totalVolume;
+        }
+
+
+        #endregion
     }
 }

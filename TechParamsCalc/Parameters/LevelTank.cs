@@ -26,7 +26,7 @@ namespace TechParamsCalc.Parameters
         {
             get
             {
-                if (Density != null && Density.ValCalc > 0)                
+                if (Density != null && Density.ValHmi > 0)                
                     return Volume * Density.ValHmi * 0.0001;
                 else return 0;
             }
@@ -40,7 +40,7 @@ namespace TechParamsCalc.Parameters
             //Уровень в милиметрах
             LevelMm = Math.Max(0, (int)((DistanceB - DistanceA) * Level.Val_R * 10 / 1000));
 
-            //Объем
+            //Объем            
             Volume = Tank.GetVolume(LevelMm);
             return Volume;
         }
