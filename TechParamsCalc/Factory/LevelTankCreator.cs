@@ -23,7 +23,7 @@ namespace TechParamsCalc.Factory
 
         public LevelTankCreator(OpcClient opcClient, ItemsCreator itemCreator) : base(opcClient)
         {
-            subStringTagName = "_TANK";
+            subStringTagName = @"^.*_TANK.*$";
             LevelTankList = new List<LevelTank>();
             singleTagCreator = itemCreator as SingleTagCreator;
         }

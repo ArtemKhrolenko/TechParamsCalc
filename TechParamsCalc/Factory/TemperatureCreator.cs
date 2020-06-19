@@ -21,7 +21,7 @@ namespace TechParamsCalc.Factory
 
         public TemperatureCreator(OpcClient opcClient) : base(opcClient)
         {
-            subStringTagName = "_TT";
+            subStringTagName = @"^.*_T[CT].*$";
             TemperatureList = new List<Temperature>();
         }
 

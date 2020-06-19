@@ -21,7 +21,7 @@ namespace TechParamsCalc.Factory
         public List<Level> LevelList { get; private set; }
         public LevelCreator(OpcClient opcClient) : base(opcClient)
         {
-            subStringTagName = "_LT";
+            subStringTagName = @"^.*_L[CT].*$";
             LevelList = new List<Level>();
         }
 

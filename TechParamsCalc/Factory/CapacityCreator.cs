@@ -27,7 +27,7 @@ namespace TechParamsCalc.Factory
 
         public CapacityCreator(OpcClient opcClient, ItemsCreator itemCreator /*short atmoPressure*/) : base(opcClient)
         {
-            subStringTagName = "_CAP";
+            subStringTagName = @"^.*_CAP.*$";
             CapacityList = new List<Capacity>();
             //01.04.2020
             //this.atmoPressure = atmoPressure;

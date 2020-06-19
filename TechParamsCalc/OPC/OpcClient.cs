@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TechParamsCalc.Parameters;
 using TitaniumAS.Opc.Client.Da;
@@ -24,14 +26,15 @@ namespace TechParamsCalc.OPC
         }
 
         //Reads Data from OPC. Fills the Nodelist from PLC
-        internal IEnumerable<OpcDaBrowseElement> ReadDataToNodeList(string _subStringFromTagName) //e.g. "_CAP - for Capacity tag"
+        internal IEnumerable<OpcDaBrowseElement> ReadDataToNodeList(string _subStringPattern) //e.g. "_CAP - for Capacity tag"
         {
             //Читаем список переменных из OCP-сервера. Фильтруем переменные-ветви и отбираем те, в именах которых содержится _subStringFromTagName (например "_CAP")
             var opcDaElementFilter = new OpcDaElementFilter() { ElementType = OpcDaBrowseFilter.Branches };
             var browser = new OpcDaBrowserAuto(OpcServer);
 
             var items = from s in browser.GetElements(ParentNodeDescriptor, opcDaElementFilter)
-                        where s.Name.Contains(_subStringFromTagName)
+                            //where s.Name.Contains(_subStringFromTagName)
+                        where Regex.IsMatch(s.Name, _subStringPattern, RegexOptions.IgnoreCase)
                         select s;
             return items;
         }
