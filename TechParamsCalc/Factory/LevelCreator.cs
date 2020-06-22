@@ -10,7 +10,7 @@ using TechParamsCalc.Parameters;
 namespace TechParamsCalc.Factory
 {
     class LevelCreator : ItemsCreator
-    {     
+    {
 
         private string[] itemDescLevelForRead = new string[] { "R" };
         private string[] itemDescLevelForWrite = new string[0];
@@ -21,7 +21,8 @@ namespace TechParamsCalc.Factory
         public List<Level> LevelList { get; private set; }
         public LevelCreator(OpcClient opcClient) : base(opcClient)
         {
-            subStringTagName = @"^.*_L[CT].*$";
+            //@"^.*_L[CT].*$"
+            subStringTagName = @"^.*_L[CT]\d{2,3}$";
             LevelList = new List<Level>();
         }
 
