@@ -26,7 +26,8 @@ namespace TechParamsCalc.Factory
 
         public ContentCreator(OpcClient opcClient, ItemsCreator itemCreator/*short atmoPressure*/) : base(opcClient)
         {
-            subStringTagName = @"^.*_CONT.*$";
+            //@"^.*_CONT.*$"            
+            subStringTagName = @"^[S]\d{2,3}[_]\w*[_]CONT$";
             ContentList = new List<Content>();
             //01.04.2020
             //this.atmoPressure = atmoPressure;

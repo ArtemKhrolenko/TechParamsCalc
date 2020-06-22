@@ -22,7 +22,9 @@ namespace TechParamsCalc.Factory
         public LevelCreator(OpcClient opcClient) : base(opcClient)
         {
             //@"^.*_L[CT].*$"
-            subStringTagName = @"^.*_L[CT]\d{2,3}$";
+            //@"^.*_L[CT]\d{2,3}$"
+            
+            subStringTagName = @"^[S]\d{2,3}[_]\w*_L[CT]\d{2,3}$";
             LevelList = new List<Level>();
         }
 

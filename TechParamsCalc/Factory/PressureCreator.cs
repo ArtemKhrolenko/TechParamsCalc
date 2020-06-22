@@ -20,7 +20,8 @@ namespace TechParamsCalc.Factory
 
         public PressureCreator(OpcClient opcClient) : base(opcClient)
         {
-            subStringTagName = @"^.*_P[CT].*$";
+            //@"^.*_P[CT].*$"
+            subStringTagName = @"^[S]\d{2,3}[_]\w*_P[CT]\d{2,3}$";
             PressureList = new List<Pressure>();
         }
 

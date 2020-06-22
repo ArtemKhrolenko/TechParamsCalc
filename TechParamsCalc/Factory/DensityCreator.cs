@@ -22,7 +22,9 @@ namespace TechParamsCalc.Factory
 
         public DensityCreator(OpcClient opcClient, ItemsCreator itemCreator /*short atmoPressure*/) : base(opcClient)
         {
-            subStringTagName = @"^.*_DENS.*$";
+            //@"^.*_DENS.*$"
+            
+            subStringTagName = @"^[S]\d{2,3}[_]\w*[_]DENS$";
             DensityList = new List<Density>();
             //01.04.2020
             //this.atmoPressure = atmoPressure;
