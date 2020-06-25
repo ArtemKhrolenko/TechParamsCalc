@@ -103,8 +103,8 @@ namespace TechParamsCalc.Factory
                     valuesForWriting[i++] = (short)(item.DistanceB - item.DistanceA);
                     valuesForWriting[i++] = (short)item.LevelMm;
                     //item.DistanceB >= 2000 - если радиус сборника > 2м - записываем оьъем * 10
-                    valuesForWriting[i++] = (short)(item.DistanceB >= 2000 ? item.Volume * 100 : item.Volume * 1000);
-                    valuesForWriting[i++] = (short)(item.DistanceB >= 2000 ? item.Mass * 100 : item.Mass * 1000);
+                    valuesForWriting[i++] = (short)(item.Tank.dimB >= 2000 ? item.Volume * 100 : item.Volume * 1000);
+                    valuesForWriting[i++] = (short)(item.Tank.dimB >= 2000 ? item.Mass * 100 : item.Mass * 1000);
                 }
             }
 
