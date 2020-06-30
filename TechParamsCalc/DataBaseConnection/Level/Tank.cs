@@ -26,7 +26,7 @@ namespace TechParamsCalc.DataBaseConnection.Level
         public int dimF { get; set; }
 
 
-        private double radius, totalLength;
+        private double totalLength;
         private int ltoDistanceA, distanceA, distanceB;
 
 
