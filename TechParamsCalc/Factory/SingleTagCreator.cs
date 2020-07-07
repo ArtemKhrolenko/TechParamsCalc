@@ -125,7 +125,7 @@ namespace TechParamsCalc.Factory
                 //[8] Содержание ACN в сборнике 1.D02
                 new OpcDaItemDefinition
                 {
-                    ItemId = opcClient.ParentNodeDescriptor + "S11_D02_AP01.HMI",
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_A01_FC02_DENS.PERC[1]",
                     IsActive = true
                 },
 
