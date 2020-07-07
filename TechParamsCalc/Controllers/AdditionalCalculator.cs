@@ -218,8 +218,9 @@ namespace TechParamsCalc.Controllers
 
                 //Общий массовый расход воды, кг/час
                 var flowMassWaterTotal = _peroxide100Mass * 100.0 / singleTagCreator.S12_P02_AP01_HMI - _peroxide100Mass + flowMassWaterFromAcn + flowMassWaterFromReaction;
+                var str = (1 - flowMassWaterTotal / (flowMassWaterTotal + singleTagCreator.S11_A01_FC02_HMI - flowMassWaterFromAcn)) * 100.0;
 
-                return (1 - flowMassWaterTotal / (flowMassWaterTotal + singleTagCreator.S11_A01_FC02_HMI - flowMassWaterFromAcn)) * 100.0;
+                return str;
             }
 
 
