@@ -252,7 +252,7 @@ namespace TechParamsCalc.Controllers
                         peroxide100Mass = singleTagCreator.S11_P05_FC07_HMI * startPercentOfPeroxydeInMix * 0.01;
                         acnStrength = GetActualAcnStrength(peroxide100Mass);
 
-                        if (acnStrength < strengthAzeo + 0.5 || i > 200)
+                        if (acnStrength < strengthAzeo + 0.1 || i > 200)
                         {
                             startPercentOfPeroxydeInMix = startPercentOfPeroxydeInMix + step / 10.0 - step;
                             break;
