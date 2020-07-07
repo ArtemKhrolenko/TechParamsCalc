@@ -22,7 +22,7 @@ namespace TechParamsCalc.UserControls
     public partial class ServerSynchronizationUC : UserControl
     {
         public string[] singleTagNamesForRW; //Имена тегов, которые нужно читать отдельно от общих групп тегов
-        private string[] otherTagsFromOPC;
+        //private string[] otherTagsFromOPC;
         public ServerSynchronizationUC()
         {
             InitializeComponent();
@@ -34,10 +34,10 @@ namespace TechParamsCalc.UserControls
             SaveButton.IsEnabled = false;
             
             //Создаем массив тегов, которые нужно дополнительно читать из OPC
-            otherTagsFromOPC = this.OtherTagsNamesTextBlock.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            //otherTagsFromOPC = this.OtherTagsNamesTextBlock.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
             //Соединяем два массива. В будущем необходимо слелать один набор параметров!!!
-            singleTagNamesForRW = new string[] { this.ServerSyncWritingTagTextBox.Text, this.AtmoPressureTagTextBox.Text }.Union(otherTagsFromOPC).ToArray();
+            singleTagNamesForRW = new string[] { this.ServerSyncWritingTagTextBox.Text, this.AtmoPressureTagTextBox.Text };
             
         }
      

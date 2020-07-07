@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using TechParamsCalc.Factory;
 using TechParamsCalc.Parameters;
 using TechDotNetLib.Lab.Substances.ContentCalculation;
+using System.Drawing.Text;
+
 namespace TechParamsCalc.Controllers
 {
     //Класс для дополнительных расчетов
@@ -133,9 +135,7 @@ namespace TechParamsCalc.Controllers
         Temperature S11_P05_TT01;
 
         //Для дельты к заданному давлению реакции
-        Pressure S11_P05_PT01;        
-        
-
+        Pressure S11_P05_PT01;
 
         internal double CalculateDeltaP(float _tt, float _pt)
         {
@@ -167,14 +167,14 @@ namespace TechParamsCalc.Controllers
             else if (numOfRange == 0)
             {
                 //Считаем по формуле №0               
-                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[0]);                
+                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[0]);
             }
 
             //Если переданное давление - больше максимального в массиве - 
             else if (numOfRange == pressureList.Count)
             {
                 //Считаем по формуле №pressureList.Count - 1
-                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[pressureList.Count - 1]);                
+                delta = ContentCalc.getPolynomValue(_tt, coefListPressure[pressureList.Count - 1]);
             }
 
 
@@ -185,7 +185,7 @@ namespace TechParamsCalc.Controllers
                 double tmpcount_2 = ContentCalc.getPolynomValue(_tt, coefListPressure[numOfRange]);
                 delta = tmpcount_1 + (tmpcount_2 - tmpcount_1) * deviation;
             }
-            
+
             return Math.Max(0, delta);
 
         }
@@ -196,9 +196,78 @@ namespace TechParamsCalc.Controllers
             S11_P05_TT01 = temperatureCreator.TemperatureList.FirstOrDefault(t => t.TagName == "S11_P05_TT01");
 
             //Delta R01
-            S11_P05_PT01 = pressureCreator.PressureList.FirstOrDefault(p => p.TagName == "S11_P05_PT01");           
+            S11_P05_PT01 = pressureCreator.PressureList.FirstOrDefault(p => p.TagName == "S11_P05_PT01");
 
             return true;
+        }
+        #endregion
+
+        #region Расчет соотношения перекиси к реакционной смеси 1 для поддержания азеотропной концентрации в 1.Т01 + крепость ACN
+        internal double[] CalculatePeroxideRatioAcnStrength()
+        {
+
+            //-----------------------Расчет крепости ACN по массовому расходу 100% перекиси---------------------------
+
+            //Массовый расход воды из расствора ACN-Water в 1.D02, кг/час
+            var flowMassWaterFromAcn = singleTagCreator.S11_A01_FC02_HMI * (1 - singleTagCreator.S11_D02_AP01_HMI * 0.01);
+
+            double GetActualAcnStrength(double _peroxide100Mass)
+            {
+                //Массовый расход воды, освободившейся после реакции, кг/час
+                var flowMassWaterFromReaction = _peroxide100Mass * 18.0153 / 34.0147; //Формулы стехиометрии реакции H2O2 + P = PO + H2O. См. файл "Теплово1 эффект реакции"
+
+                //Общий массовый расход воды, кг/час
+                var flowMassWaterTotal = _peroxide100Mass * 100.0 / singleTagCreator.S12_P02_AP01_HMI - _peroxide100Mass + flowMassWaterFromAcn + flowMassWaterFromReaction;
+
+                return (1 - flowMassWaterTotal / (flowMassWaterTotal + singleTagCreator.S11_A01_FC02_HMI - flowMassWaterFromAcn)) * 100.0;
+            }
+
+
+            //--------------------Расчет % соотношения перекись/реакционная смесь 1 ------------------------------
+
+            //Стартовый заданный % перекиси к реакционной смеси 1, %
+            var startPercentOfPeroxydeInMix = 0.0;
+
+            //Расчетная крепость ACN при стартовом заданном  % перекиси к реакционной смеси 1, %
+            var acnStrength = 0.0;
+
+            //Расчетный массовый расход перекиси (Fреакционной смеси * Заданный процент), кг/час
+            var peroxide100Mass = 0.0;
+
+            var strengthAzeo = singleTagCreator.S11_T01_PT05_AZEO_HMI;
+
+            var i = 0;
+            //Рекурсия :)            
+            double GetRatio(double step)
+            {
+                if (step < 0.001)
+                    return startPercentOfPeroxydeInMix + step * 10.0 - step;
+
+                else
+                {
+                    while (true)
+                    {
+                        //Расчитываем крепость ACN для массового расхода 100% перекиси, рассчитанного по коєффициенту перекись/реакционная смесь 1 
+                        peroxide100Mass = singleTagCreator.S11_P05_FC07_HMI * startPercentOfPeroxydeInMix * 0.01;
+                        acnStrength = GetActualAcnStrength(peroxide100Mass);
+
+                        if (acnStrength < strengthAzeo + 0.5 || i > 200)
+                        {
+                            startPercentOfPeroxydeInMix = startPercentOfPeroxydeInMix + step / 10.0 - step;
+                            break;
+                        }
+
+                        i++;
+                        startPercentOfPeroxydeInMix = startPercentOfPeroxydeInMix + step;
+                    }
+                    return GetRatio(step / 10.0);
+                }
+            }
+            //--------------------------------------------------------------------------------------------------------
+            var ratio = GetRatio(1.0);
+            var strength = GetActualAcnStrength(singleTagCreator.S12_P02_FT01_SP * singleTagCreator.S12_P02_AP01_HMI * 0.01);
+
+            return new double[] { ratio, strength };
         }
         #endregion
 
@@ -214,10 +283,13 @@ namespace TechParamsCalc.Controllers
             singleTagCreator.DeltaPE06 = (short)(CalculateDeltaP(S11_P05_TT01?.Val_R ?? -1, S11_A01_PT01?.Val_R ?? -1) * 100.0);
 
             //Расчет дельты к заданному давлению реакции по давлению в 1.А01 (S11_P05_PT01) и заданию темп-ры в реакторе 1.R01(S11_R01_TT01_SP)
-            singleTagCreator.DeltaPR01 = (short)( CalculateDeltaP(singleTagCreator.S11_R01_TT01_SP, S11_P05_PT01?.Val_R ?? -1) * 100);
+            singleTagCreator.DeltaPR01 = (short)(CalculateDeltaP(singleTagCreator.S11_R01_TT01_SP, S11_P05_PT01?.Val_R ?? -1) * 100);
 
+            //Расчет соотношения перекиси к реакционной смеси 1 для поддержания азеотропной концентрации в 1.Т01
+            var ratioStrengthVar = CalculatePeroxideRatioAcnStrength();
 
-
+            singleTagCreator.PeroxideMixRatio = (short)(Math.Min(ratioStrengthVar[0], 32.0) * 1000);
+            singleTagCreator.AcnStrength = (short)(Math.Min(ratioStrengthVar[1], 100.0) * 100);
 
         }
     }
