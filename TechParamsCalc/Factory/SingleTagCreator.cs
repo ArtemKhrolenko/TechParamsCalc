@@ -37,9 +37,9 @@ namespace TechParamsCalc.Factory
         public float averReactFlow { get; set; }    //Расход реакционной смеси от А01 для расчета расхода пропилена на А02
         public float AcnWaterMassFlow { get; set; } //РАсхо массовый ACN с водой из D02
         public float S11_R01_TT01_SP { get; set; } //Задание температуры в реакторе 1.R01
-        public float S11_P05_FC07_HMI { get; set; } //Массовый расход рнакционно смеси 1 после Р05
+        public float S11_P05_FC01_AVER_HMI { get; set; } //Массовый расход рнакционно смеси 1 после Р05
         public float S12_P02_AP01_HMI { get; set; } //% содержания перекиси водорода со склада        
-        public float S11_A01_FC02_HMI { get; set; }//Расход массовый ACN из сборника 1.D02 
+        public float S11_A01_FC02_AVER_HMI { get; set; }//Расход массовый ACN из сборника 1.D02 
         public float S11_D02_AP01_HMI { get; set; } //Содержание ACN в сборнике 1.D02
         public float S12_P02_FT01_SP { get; set; } //Заданный массовый расход перекиси к реакторам
         public float S11_T01_PT05_AZEO_HMI { get; set; } //Крепость ACN в колонне 1.Т01 в точке азеотропы
@@ -104,7 +104,7 @@ namespace TechParamsCalc.Factory
                 //[5] Массовый расход реакционной смеси S11_P05_FC07_HMI
                 new OpcDaItemDefinition
                 {
-                    ItemId = opcClient.ParentNodeDescriptor + "S11_P05_FC07_HMI",
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_P05_FC01_AVER_HMI",
                     IsActive = true
                 },
 
@@ -118,7 +118,7 @@ namespace TechParamsCalc.Factory
                 //[7] Расход массовый ACN из сборника 1.D02 
                 new OpcDaItemDefinition
                 {
-                    ItemId = opcClient.ParentNodeDescriptor + "S11_A01_FC02.HMI",
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_A01_FC02_AVER_HMI",
                     IsActive = true
                 },
 
@@ -193,7 +193,7 @@ namespace TechParamsCalc.Factory
 
             //[5] Массовый расход реакционной смеси S11_P05_FC07_HMI
             if (singleValues[5].Error.Succeeded)
-                S11_P05_FC07_HMI = (short)(singleValues[5].Value) * 0.1f;
+                S11_P05_FC01_AVER_HMI = (short)(singleValues[5].Value) * 0.1f;
 
             //[6] Плотность перекиси со склада (лабораторные показатели)
             if (singleValues[6].Error.Succeeded)
@@ -201,7 +201,7 @@ namespace TechParamsCalc.Factory
 
             //[7] Расход массовый ACN из сборника 1.D02 
             if (singleValues[7].Error.Succeeded)
-                S11_A01_FC02_HMI = (short)(singleValues[7].Value) * 0.1f;
+                S11_A01_FC02_AVER_HMI = (short)(singleValues[7].Value) * 0.1f;
 
             //[8] Содержание ACN в сборнике 1.D02
             if (singleValues[8].Error.Succeeded)

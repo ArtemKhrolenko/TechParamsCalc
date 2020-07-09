@@ -209,7 +209,7 @@ namespace TechParamsCalc.Controllers
             //-----------------------Расчет крепости ACN по массовому расходу 100% перекиси---------------------------
 
             //Массовый расход воды из расствора ACN-Water в 1.D02, кг/час
-            var flowMassWaterFromAcn = singleTagCreator.S11_A01_FC02_HMI * (1 - singleTagCreator.S11_D02_AP01_HMI * 0.01);
+            var flowMassWaterFromAcn = singleTagCreator.S11_A01_FC02_AVER_HMI * (1 - singleTagCreator.S11_D02_AP01_HMI * 0.01);
 
             double GetActualAcnStrength(double _peroxide100Mass)
             {
@@ -218,7 +218,7 @@ namespace TechParamsCalc.Controllers
 
                 //Общий массовый расход воды, кг/час
                 var flowMassWaterTotal = _peroxide100Mass * 100.0 / singleTagCreator.S12_P02_AP01_HMI - _peroxide100Mass + flowMassWaterFromAcn + flowMassWaterFromReaction;
-                var str = (1 - flowMassWaterTotal / (flowMassWaterTotal + singleTagCreator.S11_A01_FC02_HMI - flowMassWaterFromAcn)) * 100.0;
+                var str = (1 - flowMassWaterTotal / (flowMassWaterTotal + singleTagCreator.S11_A01_FC02_AVER_HMI - flowMassWaterFromAcn)) * 100.0;
 
                 return str;
             }
@@ -249,7 +249,7 @@ namespace TechParamsCalc.Controllers
                     while (true)
                     {
                         //Расчитываем крепость ACN для массового расхода 100% перекиси, рассчитанного по коєффициенту перекись/реакционная смесь 1 
-                        peroxide100Mass = singleTagCreator.S11_P05_FC07_HMI * startPercentOfPeroxydeInMix * 0.01;
+                        peroxide100Mass = singleTagCreator.S11_P05_FC01_AVER_HMI * startPercentOfPeroxydeInMix * 0.01;
                         acnStrength = GetActualAcnStrength(peroxide100Mass);
 
                         if (acnStrength < strengthAzeo + 0.1 || i > 200)
