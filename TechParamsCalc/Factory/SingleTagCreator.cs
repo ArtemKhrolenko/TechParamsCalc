@@ -37,7 +37,7 @@ namespace TechParamsCalc.Factory
         public float averReactFlow { get; set; }    //Расход реакционной смеси от А01 для расчета расхода пропилена на А02
         public float AcnWaterMassFlow { get; set; } //РАсхо массовый ACN с водой из D02
         public float S11_R01_TT01_SP { get; set; } //Задание температуры в реакторе 1.R01
-        public float S11_P05_FC01_AVER_HMI { get; set; } //Массовый расход рнакционно смеси 1 после Р05
+        public float S11_P05_FC01_HMI { get; set; } //Массовый расход рнакционно смеси 1 после Р05
         public float S12_P02_AP01_HMI { get; set; } //% содержания перекиси водорода со склада        
         public float S11_A01_FC02_AVER_HMI { get; set; }//Расход массовый ACN из сборника 1.D02 
         public float S11_D02_AP01_HMI { get; set; } //Содержание ACN в сборнике 1.D02
@@ -101,10 +101,10 @@ namespace TechParamsCalc.Factory
                     IsActive = true
                 },
 
-                //[5] Массовый расход реакционной смеси S11_P05_FC07_HMI
+                //[5] Массовый расход реакционной смеси S11_P05_FC01_HMI
                 new OpcDaItemDefinition
                 {
-                    ItemId = opcClient.ParentNodeDescriptor + "S11_P05_FC01_AVER_HMI",
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_P05_FC01.HMI",
                     IsActive = true
                 },
 
@@ -191,9 +191,9 @@ namespace TechParamsCalc.Factory
             if (singleValues[4].Error.Succeeded)
                 S11_R01_TT01_SP = (short)(singleValues[4].Value) * 0.1f;
 
-            //[5] Массовый расход реакционной смеси S11_P05_FC07_HMI
+            //[5] Массовый расход реакционной смеси S11_P05_FC01_HMI
             if (singleValues[5].Error.Succeeded)
-                S11_P05_FC01_AVER_HMI = (short)(singleValues[5].Value) * 0.1f;
+                S11_P05_FC01_HMI = (short)(singleValues[5].Value) * 0.1f;
 
             //[6] Плотность перекиси со склада (лабораторные показатели)
             if (singleValues[6].Error.Succeeded)

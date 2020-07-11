@@ -249,7 +249,7 @@ namespace TechParamsCalc.Controllers
                     while (true)
                     {
                         //Расчитываем крепость ACN для массового расхода 100% перекиси, рассчитанного по коєффициенту перекись/реакционная смесь 1 
-                        peroxide100Mass = singleTagCreator.S11_P05_FC01_AVER_HMI * startPercentOfPeroxydeInMix * 0.01;
+                        peroxide100Mass = singleTagCreator.S11_P05_FC01_HMI * startPercentOfPeroxydeInMix * 0.01;
                         acnStrength = GetActualAcnStrength(peroxide100Mass);
 
                         if (acnStrength < strengthAzeo + 0.1 || i > 200)
