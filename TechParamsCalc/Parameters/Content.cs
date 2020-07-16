@@ -41,12 +41,17 @@ namespace TechParamsCalc.Parameters
                 try
                 {
 
-                    //Содержание ACN-Water по колонне 1.T04 (доазеотропная концентрация. Configuration code = 1;
+                    //Содержание ACN-Water по колонне 1.T04 (доазеотропная концентрация. Configuration code = 1);
                     if (TagName == "S11_T04_QC01_CONT" || TagName == "S11_T04_QC02_CONT" || TagName == "S11_T04_QC03_CONT" || TagName == "S11_T04_QC04_CONT" || TagName == "S11_T04_QC05_CONT")
-                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 1); //Содержание воды в смеси 0%
+                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 1);
 
+                    //Содержание ACN-Water по колонне 1.T05 (доазеотропная концентрация. Configuration code = 2);
                     else if (TagName == "S11_T05_QC01_CONT" || TagName == "S11_T05_QC02_CONT" || TagName == "S11_T05_QC03_CONT" || TagName == "S11_T05_QC04_CONT")
-                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 2); //Содержание воды в смеси 16%
+                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 2);
+
+                    //Для этих тегов не обрезаем расчитанное значение content (0-100%). Configuration code = 3
+                    else if (TagName == "S11_T01_QC05_CONT" )
+                        _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 3);
 
                     else
                         _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 0); //Pressure + deltaP 1bar (abs/relative)
