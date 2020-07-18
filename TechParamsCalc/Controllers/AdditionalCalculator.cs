@@ -277,7 +277,7 @@ namespace TechParamsCalc.Controllers
         private Density PoD08_DENS;        
         private bool InitalizePOPCalculations()
         {            
-            PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 100.0, 0.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
+            PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 85.0, 15.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
             return true;
         }
 
@@ -285,6 +285,9 @@ namespace TechParamsCalc.Controllers
         {
             var newDens = 0.0;
             var POContent = 0.0;
+            PoD08_DENS.PercArray[0] = 85.0;
+            PoD08_DENS.PercArray[1] = 15.0;
+            PoD08_DENS.PercArray[2] = 0.0;
             while (true)
             {
                 newDens = PoD08_DENS.CalculateDensity();
@@ -298,7 +301,7 @@ namespace TechParamsCalc.Controllers
                 PoD08_DENS.PercArray[1] = 100.0 - PoD08_DENS.PercArray[0] - PoD08_DENS.PercArray[2];
 
             }
-            return POContent;
+            return Math.Min(100.0, POContent);
         }
             #endregion
 
