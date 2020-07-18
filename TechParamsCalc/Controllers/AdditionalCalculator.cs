@@ -33,9 +33,10 @@ namespace TechParamsCalc.Controllers
             this.contentCreator = contentCreator as ContentCreator;
             this.singleTagCreator = singleTagCreator as SingleTagCreator;
 
-            //Инициализируем раччет по расходу пропилена
+            //Инициализируем расчет по расходу пропилена
             isInitPropyleneSuccess = InitalizePropyleneCalculations();
             isInitDeltaPSuccess = InitalizeDeltaPCalculations();
+            InitalizePOPCalculations();
         }
 
         #region Расчет массы пропилена в 1й реакционной смеси (22.05.2020)
@@ -272,9 +273,37 @@ namespace TechParamsCalc.Controllers
         }
         #endregion
 
+        #region Расчет крепости пропиленоксида в сборник 1.D08 (итерационый расчет)
+        private Density PoD08_DENS;        
+        private bool InitalizePOPCalculations()
+        {            
+            PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 100.0, 0.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
+            return true;
+        }
 
-        //Все дополнительные расчеты
-        internal void CalculateParameters()
+        internal double CalculateOPForD08()
+        {
+            var newDens = 0.0;
+            var POContent = 0.0;
+            while (true)
+            {
+                newDens = PoD08_DENS.CalculateDensity();
+                if (newDens > singleTagCreator.S11_P13_FT01_Mass_DENSITY * 10.0)
+                {
+                    POContent = PoD08_DENS.PercArray[2];
+                    break;
+                }
+                PoD08_DENS.PercArray[2] += 0.1;
+                PoD08_DENS.PercArray[0] = (100.0 - PoD08_DENS.PercArray[2]) * 0.85;
+                PoD08_DENS.PercArray[1] = 100.0 - PoD08_DENS.PercArray[0] - PoD08_DENS.PercArray[2];
+
+            }
+            return POContent;
+        }
+            #endregion
+
+            //Все дополнительные расчеты
+            internal void CalculateParameters()
         {
 
             CalculateMassOfPropylene();
@@ -292,6 +321,9 @@ namespace TechParamsCalc.Controllers
             singleTagCreator.PeroxideMixRatio = (short)(Math.Min(ratioStrengthVar[0], 32.0) * 1000);
             singleTagCreator.AcnStrength = (short)(Math.Min(ratioStrengthVar[1], 100.0) * 100);
 
+            //Расчет крепости PO к сборнику 1.D08;
+            var somePoContent = CalculateOPForD08();
+            singleTagCreator.PoStrengthD08 = (short)(somePoContent * 100.0);
         }
     }
 }

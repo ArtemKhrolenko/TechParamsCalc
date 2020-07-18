@@ -22,6 +22,7 @@ namespace TechParamsCalc.Factory
         public short DeltaPR01 { get; set; } //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
         public short PeroxideMixRatio { get; set; } //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
         public short AcnStrength { get; set; } //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
+        public short PoStrengthD08 { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет)
 
         #endregion
 
@@ -43,6 +44,8 @@ namespace TechParamsCalc.Factory
         public float S11_D02_AP01_HMI { get; set; } //Содержание ACN в сборнике 1.D02
         public float S12_P02_FT01_SP { get; set; } //Заданный массовый расход перекиси к реакторам
         public float S11_T01_PT05_AZEO_HMI { get; set; } //Крепость ACN в колонне 1.Т01 в точке азеотропы
+        public float S11_P13_FT01_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO в сборник 1.D08
+        public float S11_P13_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO в сборник 1.D08
         #endregion
 
         //группа для записи переменных, которые должны писаться одновременно двумя серверами
@@ -141,9 +144,21 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S11_T01_PT05_AZEO_HMI",
                     IsActive = true
-                }              
+                },                
+                
+                //[11] Температура от массового расходомера PO в сборник 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_P13_FT01_Mass.TEMPERATURE",
+                    IsActive = true
+                },
 
-
+                //[12] Плотность от массового расходомера PO в сборник 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_P13_FT01_Mass.DENSITY",
+                    IsActive = true
+                }
             };
 
             dataGroupRead = opcClient.OpcServer.AddGroup("SingleTagGroupRead");                               //Группа переменных для чтения (записи) из OPC-сервера 
@@ -211,9 +226,17 @@ namespace TechParamsCalc.Factory
             if (singleValues[9].Error.Succeeded)
                 S12_P02_FT01_SP = (short)(singleValues[9].Value) * 0.1f;
 
-            //Крепость ACN в колонне 1.Т01 в точке азеотропы
+            //[10] Крепость ACN в колонне 1.Т01 в точке азеотропы
             if (singleValues[10].Error.Succeeded)
                 S11_T01_PT05_AZEO_HMI = (short)(singleValues[10].Value) * 0.01f;
+
+            //[11] Температура от массового расходомера PO в сборник 1.D08
+            if (singleValues[11].Error.Succeeded)
+                S11_P13_FT01_Mass_TEMPERATURE = (float)singleValues[11].Value;
+
+            //[12] Плотность от массового расходомера PO в сборник 1.D08
+            if (singleValues[12].Error.Succeeded)
+                S11_P13_FT01_Mass_DENSITY = (float)singleValues[12].Value;
             #endregion
         }
 
@@ -249,40 +272,47 @@ namespace TechParamsCalc.Factory
 
             var aSyncWriteItems = new OpcDaItemDefinition[]
             {
-                //Переменая "Масса пропилена" для задания расхода пропилена на T02
+                //[0] Переменая "Масса пропилена" для задания расхода пропилена на T02
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[20]",
                     IsActive = true
                 },
 
-                //Расчетный перепад давления в 1.E06 после теплообменника 1.E23
+                //[1] Расчетный перепад давления в 1.E06 после теплообменника 1.E23
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[21]",
                     IsActive = true
                 },
 
-                //Расчетная дельта к заданию давления реакции (см. AdditionalCalculator класс)
+                //[2] Расчетная дельта к заданию давления реакции (см. AdditionalCalculator класс)
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[22]",
                     IsActive = true
                 },
 
-                //Расчетная крепость ACN в колонне 1.Т01 для поддержания точки азиотропы
+                //[3] Расчетная крепость ACN в колонне 1.Т01 для поддержания точки азиотропы
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[23]",
                     IsActive = true
                 },
 
-                //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
+                //[4] Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[24]",
                     IsActive = true
-                }                
+                },
+
+                //[5] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет)
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[25]",
+                    IsActive = true
+                }
         };
 
             results = dataGroupWrite.AddItems(aSyncWriteItems);
@@ -308,6 +338,8 @@ namespace TechParamsCalc.Factory
             valuesForWriting[2] = DeltaPR01;
             valuesForWriting[3] = PeroxideMixRatio;
             valuesForWriting[4] = AcnStrength;
+            valuesForWriting[5] = PoStrengthD08;
+
             //........Добавить при необходимости
 
             if (opcClient.OpcServer.IsConnected)
