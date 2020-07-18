@@ -50,7 +50,7 @@ namespace TechParamsCalc.Parameters
                         _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 2);
 
                     //Для этих тегов не обрезаем расчитанное значение content (0-100%). Configuration code = 3
-                    else if (TagName == "S11_T01_QC05_CONT" )
+                    else if (TagName == "S11_T01_QC05_CONT" || TagName == "S11_T01_QC04_CONT")
                         _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), 3);
 
                     else
