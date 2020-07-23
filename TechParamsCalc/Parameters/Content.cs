@@ -18,6 +18,8 @@ namespace TechParamsCalc.Parameters
         public short[] DeltaP { get; set; }
         public string[] PercDescription { get; set; }
 
+        //configurationCode = 10 : разряд единиц - признак снятия ограничения 0-100% (0 - не снято; 1 - снято); Разряд десятков - выбор формулы для расчетов
+        public short Conf { get; set; }
         public Temperature Temperature { get; set; }
         public Pressure Pressure { get; set; }
         public short AtmoPressure { get; set; }

@@ -14,7 +14,7 @@ namespace TechParamsCalc.Factory
 {
     internal class ContentCreator : ItemsCreator
     {
-        private string[] itemDescContentForRead = new string[] { "SEL", "VAL_HMI", "VAL_CALC", "DELTA_P", "DELTA_T" };
+        private string[] itemDescContentForRead = new string[] { "SEL", "VAL_HMI", "VAL_CALC", "DELTA_P", "DELTA_T", "CONF" };
         private string[] itemDescContentForWrite = new string[] { "VAL_CALC" };
 
         public List<Content> ContentList { get; private set; }
@@ -102,6 +102,7 @@ namespace TechParamsCalc.Factory
                         //_capacity.val_calc = (short)capacityValues[2 + _valueCollectionIterator].Value;
                         content.DeltaP = (short[])contentValues[3 + valueCollectionIterator].Value;
                         content.DeltaT = (short[])contentValues[4 + valueCollectionIterator].Value;
+                        content.Conf = (short)contentValues[5 + valueCollectionIterator].Value;
 
                         //Инициализация массива description при первом апдейте списка capacity
                         if (content.PercDescription == null)
