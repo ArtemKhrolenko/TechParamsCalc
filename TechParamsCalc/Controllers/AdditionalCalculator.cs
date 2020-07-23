@@ -274,39 +274,50 @@ namespace TechParamsCalc.Controllers
         #endregion
 
         #region Расчет крепости пропиленоксида в сборник 1.D08 (итерационый расчет)
-        private Density PoD08_DENS;        
+        private Density PoD08_DENS;
         private bool InitalizePOPCalculations()
-        {            
-            PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 85.0, 15.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
-            return true;
+        {
+            //PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 85.0, 15.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
+            PoD08_DENS = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S11_T03_AP03_DENS");
+            if (PoD08_DENS != null)
+                PoD08_DENS.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE);
+            return PoD08_DENS != null;
         }
 
         internal double CalculateOPForD08()
         {
             var newDens = 0.0;
             var POContent = 0.0;
-            PoD08_DENS.PercArray[0] = 85.0;
-            PoD08_DENS.PercArray[1] = 15.0;
-            PoD08_DENS.PercArray[2] = 0.0;
+
+            if (PoD08_DENS == null)
+                return -1.0;
+
+            PoD08_DENS.PercArray[0] = 17.0;   //Water
+            PoD08_DENS.PercArray[1] = 83.0;   //ACN
+            PoD08_DENS.PercArray[2] = 0.0;    //P
+            PoD08_DENS.PercArray[3] = 0.0;    //PO
+
+            PoD08_DENS.Temperature.Val_R = singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE;
+
+            int i = 0;
             while (true)
             {
                 newDens = PoD08_DENS.CalculateDensity();
-                if (newDens > singleTagCreator.S11_P13_FT01_Mass_DENSITY * 10.0)
+                if (newDens > singleTagCreator.S11_P13_FT01_Mass_DENSITY * 10.0 || i++ > 1000)
                 {
-                    POContent = PoD08_DENS.PercArray[2];
+                    POContent = PoD08_DENS.PercArray[3];
                     break;
                 }
-                PoD08_DENS.PercArray[2] += 0.1;
-                PoD08_DENS.PercArray[0] = (100.0 - PoD08_DENS.PercArray[2]) * 0.85;
-                PoD08_DENS.PercArray[1] = 100.0 - PoD08_DENS.PercArray[0] - PoD08_DENS.PercArray[2];
-
+                PoD08_DENS.PercArray[3] += 0.1;
+                PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.85;
+                PoD08_DENS.PercArray[0] = 100.0 - PoD08_DENS.PercArray[1] - PoD08_DENS.PercArray[2] - PoD08_DENS.PercArray[3];
             }
             return Math.Min(100.0, POContent);
         }
-            #endregion
+        #endregion
 
-            //Все дополнительные расчеты
-            internal void CalculateParameters()
+        //Все дополнительные расчеты
+        internal void CalculateParameters()
         {
 
             CalculateMassOfPropylene();
@@ -327,6 +338,7 @@ namespace TechParamsCalc.Controllers
             //Расчет крепости PO к сборнику 1.D08;
             var somePoContent = CalculateOPForD08();
             singleTagCreator.PoStrengthD08 = (short)(somePoContent * 100.0);
+            singleTagCreator.S11_P13_2_FT01_PERC = PoD08_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
         }
     }
 }

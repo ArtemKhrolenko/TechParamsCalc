@@ -23,6 +23,8 @@ namespace TechParamsCalc.Factory
         public short PeroxideMixRatio { get; set; } //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
         public short AcnStrength { get; set; } //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
         public short PoStrengthD08 { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет)
+        public short[] S11_P13_2_FT01_PERC { get; set; } //Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
+
 
         #endregion
 
@@ -312,6 +314,13 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[25]",
                     IsActive = true
+                },
+
+                //[6] Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_T03_AP03_DENS.PERC",
+                    IsActive = true
                 }
         };
 
@@ -339,6 +348,8 @@ namespace TechParamsCalc.Factory
             valuesForWriting[3] = PeroxideMixRatio;
             valuesForWriting[4] = AcnStrength;
             valuesForWriting[5] = PoStrengthD08;
+            valuesForWriting[6] = S11_P13_2_FT01_PERC;
+
 
             //........Добавить при необходимости
 
