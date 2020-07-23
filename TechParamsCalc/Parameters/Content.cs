@@ -52,9 +52,10 @@ namespace TechParamsCalc.Parameters
                 else if (TagName == "S11_T05_QC01_CONT" || TagName == "S11_T05_QC02_CONT" || TagName == "S11_T05_QC03_CONT" || TagName == "S11_T05_QC04_CONT")
                     configurationCode = 20;                
 
+                //Формирование Configuration code - через CONF в составе CONT - читается из контроллера
                 //Для этих тегов не обрезаем расчитанное значение content (0-100%). Configuration code = 1
-                //else if (TagName == "S11_T01_QC01_CONT" || TagName == "S11_T01_QC02_CONT" || TagName == "S11_T01_QC03_CONT" || TagName == "S11_T01_QC04_CONT")
-                //    configurationCode = 11; 
+                else if (TagName == "S11_T01_QC01_CONT" || TagName == "S11_T01_QC02_CONT" || TagName == "S11_T01_QC03_CONT" || TagName == "S11_T01_QC04_CONT")
+                    configurationCode = 11; 
                 
 
                 try
