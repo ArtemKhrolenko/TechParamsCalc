@@ -60,7 +60,7 @@ namespace TechParamsCalc.Parameters
 
                 try
                 {
-                    _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), configurationCode);
+                    _contentValue = mix.GetContent((float)(Temperature.Val_R + DeltaT[0] * 0.1), (float)(Pressure?.Val_R + DeltaP[0] * 0.01 + AtmoPressure * 0.0001f), Conf);
                 }
                 catch (Exception)
                 {
