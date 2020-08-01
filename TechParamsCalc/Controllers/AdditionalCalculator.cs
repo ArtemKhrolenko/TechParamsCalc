@@ -303,12 +303,12 @@ namespace TechParamsCalc.Controllers
             while (true)
             {
                 newDens = PoD08_DENS.CalculateDensity();
-                if (newDens > singleTagCreator.S11_P13_FT01_Mass_DENSITY * 10.0 || i++ > 1000)
+                if (newDens > singleTagCreator.S11_P13_FT01_Mass_DENSITY * 10.0 || i++ > 2000)
                 {
                     POContent = PoD08_DENS.PercArray[3];
                     break;
                 }
-                PoD08_DENS.PercArray[3] += 0.1;
+                PoD08_DENS.PercArray[3] += 0.05;
                 PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.85;
                 PoD08_DENS.PercArray[0] = 100.0 - PoD08_DENS.PercArray[1] - PoD08_DENS.PercArray[2] - PoD08_DENS.PercArray[3];
             }
