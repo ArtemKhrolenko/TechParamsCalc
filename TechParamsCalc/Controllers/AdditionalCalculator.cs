@@ -292,8 +292,8 @@ namespace TechParamsCalc.Controllers
             if (PoD08_DENS == null)
                 return -1.0;
 
-            PoD08_DENS.PercArray[0] = 17.0;   //Water
-            PoD08_DENS.PercArray[1] = 83.0;   //ACN
+            PoD08_DENS.PercArray[0] = 13.0;   //Water
+            PoD08_DENS.PercArray[1] = 87.0;   //ACN
             PoD08_DENS.PercArray[2] = 0.0;    //P
             PoD08_DENS.PercArray[3] = 0.0;    //PO
 
@@ -309,7 +309,7 @@ namespace TechParamsCalc.Controllers
                     break;
                 }
                 PoD08_DENS.PercArray[3] += 0.05;
-                PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.83;
+                PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.87;
                 PoD08_DENS.PercArray[0] = 100.0 - PoD08_DENS.PercArray[1] - PoD08_DENS.PercArray[2] - PoD08_DENS.PercArray[3];
             }
             return Math.Min(100.0, POContent);
