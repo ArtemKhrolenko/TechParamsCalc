@@ -309,7 +309,7 @@ namespace TechParamsCalc.Controllers
                     break;
                 }
                 PoD08_DENS.PercArray[3] += 0.05;
-                PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.87;
+                PoD08_DENS.PercArray[1] = (100.0 - PoD08_DENS.PercArray[3] - PoD08_DENS.PercArray[2]) * 0.83;
                 PoD08_DENS.PercArray[0] = 100.0 - PoD08_DENS.PercArray[1] - PoD08_DENS.PercArray[2] - PoD08_DENS.PercArray[3];
             }
             return Math.Min(100.0, POContent);
