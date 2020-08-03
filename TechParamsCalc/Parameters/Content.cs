@@ -39,24 +39,7 @@ namespace TechParamsCalc.Parameters
 
             try
             {
-                mix = new Mix(PercDescription);
-
-                //configurationCode = 10 : разряд единиц - признак снятия ограничения 0-100% (0 - не снято; 1 - снято); Разряд десятков - выбор формулы для расчетов
-                var configurationCode = 0;
-
-                //Содержание ACN-Water по колонне 1.T04 (доазеотропная концентрация. Configuration code = 10. Без снятия ограничения 0 - 100%);
-                if (TagName == "S11_T04_QC01_CONT" || TagName == "S11_T04_QC02_CONT" || TagName == "S11_T04_QC03_CONT" || TagName == "S11_T04_QC04_CONT" || TagName == "S11_T04_QC05_CONT")
-                    configurationCode = 10;
-
-                //Содержание ACN-Water по колонне 1.T05 (доазеотропная концентрация. Configuration code = 20. Без снятия ограничения 0 - 100%);
-                else if (TagName == "S11_T05_QC01_CONT" || TagName == "S11_T05_QC02_CONT" || TagName == "S11_T05_QC03_CONT" || TagName == "S11_T05_QC04_CONT")
-                    configurationCode = 20;                
-
-                //Формирование Configuration code - через CONF в составе CONT - читается из контроллера
-                //Для этих тегов не обрезаем расчитанное значение content (0-100%). Configuration code = 1
-                else if (TagName == "S11_T01_QC01_CONT" || TagName == "S11_T01_QC02_CONT" || TagName == "S11_T01_QC03_CONT" || TagName == "S11_T01_QC04_CONT")
-                    configurationCode = 11; 
-                
+                mix = new Mix(PercDescription);               
 
                 try
                 {
