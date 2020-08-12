@@ -321,8 +321,7 @@ namespace TechParamsCalc.Controllers
 
         private Density S13_P03_FC01_DENS;
         private bool InitalizePOPCalculations_S13_P03()
-        {
-            //S13_P03_FC01_DENS = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S13_P03_FC01_DENS");
+        {            
             var temperature = temperatureCreator.TemperatureList.FirstOrDefault(t => t.TagName == "S13_P03_TC02");
 
             if (temperature != null)

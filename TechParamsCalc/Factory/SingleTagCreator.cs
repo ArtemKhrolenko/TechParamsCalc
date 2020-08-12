@@ -353,7 +353,7 @@ namespace TechParamsCalc.Factory
                 //[8] Расчетные проценты массового содержания компонентов в смеси S13_P03_FT01
                 new OpcDaItemDefinition
                 {
-                    ItemId = opcClient.ParentNodeDescriptor + "S13_D01_QC01_DENS.PERC",
+                    ItemId = opcClient.ParentNodeDescriptor + "S13_P03_QC01_DENS.PERC",
                     IsActive = true
                 }                
         };
