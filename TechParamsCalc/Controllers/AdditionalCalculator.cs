@@ -336,8 +336,7 @@ namespace TechParamsCalc.Controllers
             var POContent = 0.0;
 
             if (S13_P03_FC01_DENS == null)
-                return -1.0;
-            S13_P03_FC01_DENS.PercArray = new double[4];
+                return -1.0;            
 
             S13_P03_FC01_DENS.PercArray[0] = 13.0;   //Water
             S13_P03_FC01_DENS.PercArray[1] = 87.0;   //ACN
