@@ -37,6 +37,7 @@ namespace TechParamsCalc.Controllers
             isInitPropyleneSuccess = InitalizePropyleneCalculations();
             isInitDeltaPSuccess = InitalizeDeltaPCalculations();
             InitalizePOPCalculations();
+            InitalizePOPCalculations_S13_P03();
         }
 
         #region Расчет массы пропилена в 1й реакционной смеси (22.05.2020)
@@ -316,6 +317,50 @@ namespace TechParamsCalc.Controllers
         }
         #endregion
 
+        #region Расчет крепости пропиленоксида из склада в колонну 1.Т01 (итерационый расчет)
+
+        private Density S13_P03_FC01_DENS;
+        private bool InitalizePOPCalculations_S13_P03()
+        {
+            //S13_P03_FC01_DENS = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S13_P03_FC01_DENS");
+            var temperature = temperatureCreator.TemperatureList.FirstOrDefault(t => t.TagName == "S13_P03_TC02");
+
+            if (temperature != null)
+                S13_P03_FC01_DENS = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[] { 0, 0, 0, 0 }, temperature);
+            
+            return S13_P03_FC01_DENS != null;
+        }
+
+        internal double CalculateOPFor_S13_P03()
+        {
+            var newDens = 0.0;
+            var POContent = 0.0;
+
+            if (S13_P03_FC01_DENS == null)
+                return -1.0;
+            S13_P03_FC01_DENS.PercArray = new double[4];
+
+            S13_P03_FC01_DENS.PercArray[0] = 13.0;   //Water
+            S13_P03_FC01_DENS.PercArray[1] = 87.0;   //ACN
+            S13_P03_FC01_DENS.PercArray[2] = 0.0;    //P
+            S13_P03_FC01_DENS.PercArray[3] = 0.0;    //PO                       
+
+            int i = 0;
+            while (true)
+            {
+                newDens = S13_P03_FC01_DENS.CalculateDensity();
+                if (newDens > singleTagCreator.S13_P03_FT01_Mass_DENSITY * 10.0 || i++ > 2000)
+                {
+                    POContent = S13_P03_FC01_DENS.PercArray[3];
+                    break;
+                }
+                S13_P03_FC01_DENS.PercArray[3] += 0.05;
+                S13_P03_FC01_DENS.PercArray[1] = (100.0 - S13_P03_FC01_DENS.PercArray[3] - S13_P03_FC01_DENS.PercArray[2]) * 0.87;
+                S13_P03_FC01_DENS.PercArray[0] = 100.0 - S13_P03_FC01_DENS.PercArray[1] - S13_P03_FC01_DENS.PercArray[2] - S13_P03_FC01_DENS.PercArray[3];
+            }
+            return Math.Min(100.0, POContent);
+        }
+        #endregion
         //Все дополнительные расчеты
         internal void CalculateParameters()
         {
@@ -339,6 +384,11 @@ namespace TechParamsCalc.Controllers
             var somePoContent = CalculateOPForD08();
             singleTagCreator.PoStrengthD08 = (short)(somePoContent * 100.0);
             singleTagCreator.S11_P13_2_FT01_PERC = PoD08_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+
+            //Расчет крепости PO со склада на колонну 1.T01
+            var somePOContentFromP03 = CalculateOPFor_S13_P03();
+            singleTagCreator.PoStrengthP03 = (short)(somePOContentFromP03 * 100.0);
+            singleTagCreator.S13_P03_FT01_PERC = S13_P03_FC01_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
         }
     }
 }
