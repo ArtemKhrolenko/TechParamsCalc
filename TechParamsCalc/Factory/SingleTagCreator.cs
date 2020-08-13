@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using TechParamsCalc.OPC;
 using TitaniumAS.Opc.Client.Da;
 using TitaniumAS.Opc.Client.Da.Browsing;
@@ -257,7 +258,7 @@ namespace TechParamsCalc.Factory
             }
             catch (Exception)
             {
-
+               
                
             }
         }
