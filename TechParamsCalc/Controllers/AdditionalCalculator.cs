@@ -358,6 +358,35 @@ namespace TechParamsCalc.Controllers
             }
             return Math.Min(100.0, POContent);
         }
+
+
+        //Итеративный расчет содержания PO (общая функция)
+        private (double, double[]) CalculateStrength(double waterContent, double acnContent, float densityFromMassFT, ref Density inputDensity)
+        {
+            var newDens = 0.0;
+            var POContent = 0.0;
+            var percArray = new double[4] {waterContent, acnContent,  0.0, 0.0 }; //ACN, Water, P, PO
+            
+
+            if (inputDensity == null)
+                return (-1.0, new double[]{ -1.0, -1.0, -1.0, -1.0});
+
+            int i = 0;
+            while (true)
+            {
+                newDens = inputDensity.CalculateDensity();
+                if (newDens > densityFromMassFT * 10.0 || i++ > 2000)
+                {
+                    POContent = percArray[3];
+                    break;
+                }
+                percArray[3] += 0.05;                                                        //PO
+                percArray[1] = (100.0 - percArray[3] - percArray[2]) * acnContent * 0.01;    //ACN
+                percArray[0] = 100.0 - percArray[1] - percArray[2] - percArray[3];           //Water
+            }
+            return (Math.Min(100.0, POContent), percArray);
+        }
+
         #endregion
         //Все дополнительные расчеты
         internal void CalculateParameters()
@@ -379,14 +408,16 @@ namespace TechParamsCalc.Controllers
             singleTagCreator.AcnStrength = (short)(Math.Min(ratioStrengthVar[1], 100.0) * 100);
 
             //Расчет крепости PO к сборнику 1.D08;
-            var somePoContent = CalculateOPForD08();
-            singleTagCreator.PoStrengthD08 = (short)(somePoContent * 100.0);
-            singleTagCreator.S11_P13_2_FT01_PERC = PoD08_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+            //var somePoContent = CalculateOPForD08();
+            //singleTagCreator.PoStrengthD08 = (short)(somePoContent * 100.0);
+            //singleTagCreator.S11_P13_2_FT01_PERC = PoD08_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+            var somePoContent = CalculateStrength(13.0, 87.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS);
 
             //Расчет крепости PO со склада на колонну 1.T01
-            var somePOContentFromP03 = CalculateOPFor_S13_P03();
-            singleTagCreator.PoStrengthP03 = (short)(somePOContentFromP03 * 100.0);
-            singleTagCreator.S13_P03_FT01_PERC = S13_P03_FC01_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+            //var somePOContentFromP03 = CalculateOPFor_S13_P03();
+            //singleTagCreator.PoStrengthP03 = (short)(somePOContentFromP03 * 100.0);
+            //singleTagCreator.S13_P03_FT01_PERC = S13_P03_FC01_DENS.PercArray.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+            var somePOContentFromP03 = CalculateStrength(13.0, 87.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS);
         }
     }
 }
