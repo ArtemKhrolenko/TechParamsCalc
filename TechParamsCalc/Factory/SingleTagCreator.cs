@@ -23,9 +23,11 @@ namespace TechParamsCalc.Factory
         public short DeltaPR01 { get; set; } //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
         public short PeroxideMixRatio { get; set; } //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
         public short AcnStrength { get; set; } //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
-        public short PoStrengthD08 { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет)
+        public short PoStrengthD08_87PercAcn { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
+        public short PoStrengthD08_0PercAcn { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
         public short[] S11_P13_2_FT01_PERC { get; set; } //Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
-        public short PoStrengthP03 { get; set; } //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет)
+        public short PoStrengthP03_87PercAcn { get; set; } //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
+        public short PoStrengthP03_0PercAcn { get; set; } //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
         public short[] S13_P03_FT01_PERC { get; set; } //Расчетные проценты массового содержания компонентов в смеси S13_P03_FT01
         #endregion
 
@@ -330,7 +332,7 @@ namespace TechParamsCalc.Factory
                     IsActive = true
                 },
 
-                //[5] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет)
+                //[5] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 87% ACN в паре ACN-Water
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[25]",
@@ -356,7 +358,21 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S13_P03_QC01_DENS.PERC",
                     IsActive = true
-                }                
+                },
+                
+                //[9] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 0% ACN в паре ACN-Water
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[27]",
+                    IsActive = true
+                },
+
+                //[10] Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 0% ACN в паре ACN-Water
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[28]",
+                    IsActive = true
+                }
         };
 
             results = dataGroupWrite.AddItems(aSyncWriteItems);
@@ -377,15 +393,17 @@ namespace TechParamsCalc.Factory
         //Запись асинхронной группы
         protected internal void WriteASyncItemToOPC()
         {
-            valuesForWriting[0] = PropyleneMass;
-            valuesForWriting[1] = DeltaPE06;
-            valuesForWriting[2] = DeltaPR01;
-            valuesForWriting[3] = PeroxideMixRatio;
-            valuesForWriting[4] = AcnStrength;
-            valuesForWriting[5] = PoStrengthD08;
-            valuesForWriting[6] = S11_P13_2_FT01_PERC;
-            valuesForWriting[7] = PoStrengthP03;
-            valuesForWriting[8] = S13_P03_FT01_PERC;
+            valuesForWriting[0]  = PropyleneMass;
+            valuesForWriting[1]  = DeltaPE06;
+            valuesForWriting[2]  = DeltaPR01;
+            valuesForWriting[3]  = PeroxideMixRatio;
+            valuesForWriting[4]  = AcnStrength;
+            valuesForWriting[5]  = PoStrengthD08_87PercAcn;
+            valuesForWriting[6]  = S11_P13_2_FT01_PERC;
+            valuesForWriting[7]  = PoStrengthP03_87PercAcn;
+            valuesForWriting[8]  = S13_P03_FT01_PERC;
+            valuesForWriting[9]  = PoStrengthD08_0PercAcn;
+            valuesForWriting[10] = PoStrengthP03_0PercAcn;
 
             //........Добавить при необходимости
 
