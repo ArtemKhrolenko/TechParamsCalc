@@ -343,12 +343,17 @@ namespace TechParamsCalc.Controllers
 
         //Расчет крепости пропиленоксида в сборник 1.D08 (итерационый расчет)
         private Density PoD08_DENS;
+        private Density PoD08_DENS_2;
+
         private bool InitalizePOPCalculations()
         {
             //PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 85.0, 15.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
             PoD08_DENS = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S11_T03_AP03_DENS");
             if (PoD08_DENS != null)
                 PoD08_DENS.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE);
+
+            PoD08_DENS_2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
+
             return PoD08_DENS != null;
         }
 
@@ -422,7 +427,7 @@ namespace TechParamsCalc.Controllers
 
             //4. Расчет крепости PO к сборнику 1.D08;
             var d08_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS, true);          //Содержание PO при 87% ACN в смеси ACN-Water
-            var d08_strength_0 = CalculateStrength(100.0, 0.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS, false);         //Содержание PO при 0% ACN в смеси ACN-Water
+            var d08_strength_0 = CalculateStrength(50.0, 50.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS_2, true);         //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthD08_87PercAcn = (short)(d08_strngth_87.Item1 * 100.0);
             singleTagCreator.PoStrengthD08_0PercAcn = (short)(d08_strength_0.Item1 * 100.0);
