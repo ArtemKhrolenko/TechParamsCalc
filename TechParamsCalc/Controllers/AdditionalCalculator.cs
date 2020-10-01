@@ -350,11 +350,12 @@ namespace TechParamsCalc.Controllers
             //PoD08_DENS = new Density(new string[] { "ACN", "Water", "PO" }, new double[] { 85.0, 15.0, 0.0 }, new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
             PoD08_DENS = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S11_T03_AP03_DENS");
             if (PoD08_DENS != null)
+            {
                 PoD08_DENS.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE);
+                PoD08_DENS_2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], PoD08_DENS.Temperature);
+            }
 
-            PoD08_DENS_2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], new Temperature("tmpTemp", singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE));
-
-            return PoD08_DENS != null;
+            return PoD08_DENS != null && PoD08_DENS_2 != null;
         }
 
         //Расчет крепости пропиленоксида из склада в колонну 1.Т01 (итерационый расчет)
@@ -363,13 +364,15 @@ namespace TechParamsCalc.Controllers
 
         private bool InitalizePOPCalculations_S13_P03()
         {
-            var temperature = new Temperature("tmpTemp", singleTagCreator.S13_P03_FT01_Mass_TEMPERATURE);           
+            var temperature = temperatureCreator.TemperatureList.FirstOrDefault(t => t.TagName == "S13_P03_TC02");
 
-            S13_P03_FC01_DENS = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], new Temperature("tmpTemp", singleTagCreator.S13_P03_FT01_Mass_TEMPERATURE));
+            if (temperature != null)
+            {
+                S13_P03_FC01_DENS = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], temperature);
+                S13_P03_FC01_DENS_2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], temperature);
+            }
 
-            S13_P03_FC01_DENS_2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], new Temperature("tmpTemp", singleTagCreator.S13_P03_FT01_Mass_TEMPERATURE));
-
-            return S13_P03_FC01_DENS != null;
+            return S13_P03_FC01_DENS != null && S13_P03_FC01_DENS_2 != null;
         }
 
         //Итеративный расчет содержания PO (общая функция)
