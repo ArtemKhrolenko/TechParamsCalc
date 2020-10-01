@@ -52,6 +52,7 @@ namespace TechParamsCalc.Factory
         public float S11_P13_FT01_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO в сборник 1.D08
         public float S11_P13_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO в сборник 1.D08
         public float S13_P03_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO S13_P03_FC01
+        public float S13_P03_FT01_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO со склада
         #endregion
 
         //группа для записи переменных, которые должны писаться одновременно двумя серверами
@@ -171,7 +172,16 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S13_P03_FT01_Mass.DENSITY",
                     IsActive = true
+                },
+
+                //[14] Температура от массового расходомера PO со склада
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S13_P03_FT01_Mass.TEMPERATURE",
+                    IsActive = true
                 }
+
+                
             };
 
             dataGroupRead = opcClient.OpcServer.AddGroup("SingleTagGroupRead");                               //Группа переменных для чтения (записи) из OPC-сервера 
@@ -256,6 +266,11 @@ namespace TechParamsCalc.Factory
                 //[13] Плотность от массового расходомера PO S13_P03_FC01
                 if (singleValues[13].Error.Succeeded)
                     S13_P03_FT01_Mass_DENSITY = (float)singleValues[13].Value;
+
+                //[14] Температура от массового расходомера PO со склада
+                if (singleValues[14].Error.Succeeded)
+                    S13_P03_FT01_Mass_TEMPERATURE = (float)singleValues[14].Value;
+
                 #endregion
             }
             catch (Exception)
