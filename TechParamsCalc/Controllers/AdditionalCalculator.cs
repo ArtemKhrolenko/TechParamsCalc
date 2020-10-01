@@ -433,7 +433,7 @@ namespace TechParamsCalc.Controllers
 
             //4. Расчет крепости PO к сборнику 1.D08;
             var d08_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS, true);          //Содержание PO при 87% ACN в смеси ACN-Water
-            var d08_strength_0 = CalculateStrength(50.0, 50.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS_2, true);         //Содержание PO при 0% ACN в смеси ACN-Water
+            var d08_strength_0 = CalculateStrength(40.0, 60.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS_2, true);         //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthD08_87PercAcn = (short)(d08_strngth_87.Item1 * 100.0);
             singleTagCreator.PoStrengthD08_0PercAcn = (short)(d08_strength_0.Item1 * 100.0);
@@ -441,7 +441,7 @@ namespace TechParamsCalc.Controllers
 
             //5. Расчет крепости PO со склада на колонну 1.T01            
             var p13_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS, true);   //Содержание PO при 87% ACN в смеси ACN-Water
-            var p13_strngth_0 = CalculateStrength(50.0, 50.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS_2, true);  //Содержание PO при 0% ACN в смеси ACN-Water
+            var p13_strngth_0 = CalculateStrength(100, 0.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS, false);  //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthP03_87PercAcn = (short)(p13_strngth_87.Item1 * 100.0);
             singleTagCreator.PoStrengthP03_0PercAcn = (short)(p13_strngth_0.Item1 * 100.0);
