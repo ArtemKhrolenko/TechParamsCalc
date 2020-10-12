@@ -60,7 +60,9 @@ namespace TechParamsCalc.Parameters
                 _densityValue = -2;                
 
             }
-            ValCalc = (short)(_densityValue + DeltaD * 0.1);
+            if (_densityValue >= 0)
+                ValCalc = (short)(_densityValue + DeltaD * 0.1);
+
             return _densityValue;
         }
     }
