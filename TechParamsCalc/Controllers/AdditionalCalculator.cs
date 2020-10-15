@@ -432,6 +432,8 @@ namespace TechParamsCalc.Controllers
             singleTagCreator.AcnStrength = (short)(Math.Min(ratioStrengthVar[1], 100.0) * 100);
 
             //4. Расчет крепости PO к сборнику 1.D08;
+            PoD08_DENS.Temperature.Val_R = singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE;//При каждой итерации расчета читаем заново тег температуры
+
             var d08_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS, true);          //Содержание PO при 87% ACN в смеси ACN-Water
             var d08_strength_0 = CalculateStrength(40.0, 60.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref PoD08_DENS_2, true);         //Содержание PO при 0% ACN в смеси ACN-Water
 
