@@ -82,7 +82,8 @@ namespace TechParamsCalc.DataBaseConnection.Level
             totalLength = dimA + dimC * 2;
 
             //Расстояние до дна сборника для оценки неучтенного объема
-            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+            //var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - distanceB + ltoDistanceA);
 
             //Неучтенный объем жидкости под датчиком уровня
             var volumeLeft = Math.PI * radius * radius * levelFromSensorToBottomOfTheTank * 0.001 * 0.8; //0.8 - поправка на эллиптическое днище
@@ -110,7 +111,9 @@ namespace TechParamsCalc.DataBaseConnection.Level
             var radius = dimB * 0.001 / 2;
 
             //Расстояние до дна сборника для оценки неучтенного объема
-            var levelFromSensorToBottomOfTheTank = Math.Max(0, dimB - (ltoDistanceA + (distanceB - distanceA)));
+            //var levelFromSensorToBottomOfTheTank = Math.Max(0, dimB - (ltoDistanceA + (distanceB - distanceA)));
+            var levelFromSensorToBottomOfTheTank = Math.Max(0, dimB - distanceB + ltoDistanceA);
+
 
             double getSomeVolume(double level, double length)
             {
@@ -156,7 +159,8 @@ namespace TechParamsCalc.DataBaseConnection.Level
             var totalLength = dimA + dimC;
 
             //Расстояние до дна сборника для оценки неучтенного объема
-            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+            //var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - distanceB + ltoDistanceA);
 
             //Метод для расчета объема усеченного по длине цилиндра
             double getSomeVolume(double level)
