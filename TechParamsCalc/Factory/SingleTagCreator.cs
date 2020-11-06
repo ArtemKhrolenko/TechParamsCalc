@@ -17,18 +17,30 @@ namespace TechParamsCalc.Factory
 
         #region Пишем в OPC
 
-        public short IsWritableTagToPLC { get; set; }  //Слово, которое сигнализирует о том, что в OPC идет запись
-        public short PropyleneMass { get; set; }    //Расчетная масса пропилена для расчта задания расхода на Т02
-        public short DeltaPE06 { get; set; }    //Расчетный перепад давления в 1.E06 после теплообменника 1.E23
-        public short DeltaPR01 { get; set; } //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
-        public short PeroxideMixRatio { get; set; } //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
-        public short AcnStrength { get; set; } //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
-        public short PoStrengthD08_87PercAcn { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
-        public short PoStrengthD08_0PercAcn { get; set; } //Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
-        public short[] S11_P13_2_FT01_PERC { get; set; } //Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
-        public short PoStrengthP03_87PercAcn { get; set; } //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
-        public short PoStrengthP03_0PercAcn { get; set; } //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
-        public short[] S13_P03_FT01_PERC { get; set; } //Расчетные проценты массового содержания компонентов в смеси S13_P03_FT01
+        public short IsWritableTagToPLC { get; set; }           //Слово, которое сигнализирует о том, что в OPC идет запись
+        public short PropyleneMass { get; set; }                //Расчетная масса пропилена для расчта задания расхода на Т02
+        public short DeltaPE06 { get; set; }                    //Расчетный перепад давления в 1.E06 после теплообменника 1.E23
+        public short DeltaPR01 { get; set; }                    //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
+        public short PeroxideMixRatio { get; set; }             //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
+        public short AcnStrength { get; set; }                  //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
+        
+        public short PoStrengthT03_T06_87PercAcn { get; set; }  //Расчетная крепость PO от колонны 1.Т03 к 1.T06 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
+        public short PoStrengthT03_T06_0PercAcn { get; set; }   //Расчетная крепость PO от колонны 1.Т03 к 1.T06 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
+
+        public short PoStrengthP03_87PercAcn { get; set; }      //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
+        public short PoStrengthP03_0PercAcn { get; set; }       //Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
+
+        public short PoStrengthT06_D08_87PercAcn { get; set; }  //Расчетная крепость PO от колонны 1.Т06 к сборнику 1.D08 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
+        public short PoStrengthT06_D08_0PercAcn { get; set; }   //Расчетная крепость PO от колонны 1.Т06 к сборнику 1.D08 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
+
+
+        public short[] S11_P13_2_FT01_PERC { get; set; }        //Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
+        
+        public short[] S13_P03_FT01_PERC { get; set; }          //Расчетные проценты массового содержания компонентов в смеси S13_P03_FT01
+
+
+        public short[] S11_T06_FT02_PERC { get; set; }           //Расчетные проценты массового содержания компонентов в смеси S11_T06_FT01
+
         #endregion
 
 
@@ -53,6 +65,8 @@ namespace TechParamsCalc.Factory
         public float S11_P13_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO в сборник 1.D08
         public float S13_P03_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO S13_P03_FC01
         public float S13_P03_FT01_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO со склада
+        public float S11_T06_FT02_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO в колонну 1.T06
+        public float S11_T06_FT02_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO в колонну 1.T06
         #endregion
 
         //группа для записи переменных, которые должны писаться одновременно двумя серверами
@@ -179,9 +193,23 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S13_P03_FT01_Mass.TEMPERATURE",
                     IsActive = true
+                },
+
+                //[15] Плотность от массового расходомера PO в колонну 1.T06 S11_T06_FT02
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_T06_FT02_Mass.DENSITY",
+                    IsActive = true
+                },
+
+                //[16] Температура от массового расходомера PO в колонну 1.T06 S11_T06_FT02
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_T06_FT02_Mass.TEMPERATURE",
+                    IsActive = true
                 }
 
-                
+
             };
 
             dataGroupRead = opcClient.OpcServer.AddGroup("SingleTagGroupRead");                               //Группа переменных для чтения (записи) из OPC-сервера 
@@ -271,6 +299,14 @@ namespace TechParamsCalc.Factory
                 if (singleValues[14].Error.Succeeded)
                     S13_P03_FT01_Mass_TEMPERATURE = (float)singleValues[14].Value;
 
+                //[15] Плотность от массового расходомера PO в колонну 1.T06 S11_T06_FT02
+                if (singleValues[15].Error.Succeeded)
+                    S11_T06_FT02_Mass_DENSITY = (float)singleValues[15].Value;
+
+                //[16] Температура от массового расходомера PO в колонну 1.T06 S11_T06_FT02
+                if (singleValues[16].Error.Succeeded)
+                    S11_T06_FT02_Mass_TEMPERATURE = (float)singleValues[16].Value;
+
                 #endregion
             }
             catch (Exception)
@@ -347,21 +383,21 @@ namespace TechParamsCalc.Factory
                     IsActive = true
                 },
 
-                //[5] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 87% ACN в паре ACN-Water
+                //[5] Расчетная крепость PO от колонны 1.Т03 к 1.Т06 (итеративный расчет) при 87% ACN в паре ACN-Water
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[25]",
                     IsActive = true
                 },
 
-                //[6] Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
+                //[6] Расчетные проценты массового содержания компонентов в смеси от колонны 1.Т03 в 1.Т06
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S11_T03_AP03_DENS.PERC",
                     IsActive = true
                 },
 
-                //[7] Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет)
+                //[7] Расчетная крепость PO к сборнику со склада в колонну 1.Т01 (итеративный расчет) при 87% ACN в паре ACN-Water
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[26]",
@@ -375,7 +411,7 @@ namespace TechParamsCalc.Factory
                     IsActive = true
                 },
                 
-                //[9] Расчетная крепость PO к сборнику 1.D08 (итеративный расчет) при 0% ACN в паре ACN-Water
+                //[9] Расчетная крепость PO от колонны 1.Т03 к 1.Т06 (итеративный расчет) при 0% ACN в паре ACN-Water
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[27]",
@@ -386,6 +422,27 @@ namespace TechParamsCalc.Factory
                 new OpcDaItemDefinition
                 {
                     ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[28]",
+                    IsActive = true
+                },
+
+                //[11] Расчетная крепость PO от колонны 1.Т06 к сборнику 1.D08 (итеративный расчет) при 87% ACN в паре ACN-Water
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[29]",
+                    IsActive = true
+                },
+
+                //[12] Расчетная крепость PO от колонны 1.Т06 к сборнику 1.D08 (итеративный расчет) при 0% ACN в паре ACN-Water
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + SingleTagNames[0] + "[30]",
+                    IsActive = true
+                },
+
+                //[13] Расчетные проценты массового содержания компонентов в смеси от колонны 1.Т06 к сборнику 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_D08_AP01_DENS.PERC",
                     IsActive = true
                 }
         };
@@ -413,12 +470,15 @@ namespace TechParamsCalc.Factory
             valuesForWriting[2]  = DeltaPR01;
             valuesForWriting[3]  = PeroxideMixRatio;
             valuesForWriting[4]  = AcnStrength;
-            valuesForWriting[5]  = PoStrengthD08_87PercAcn;
-            valuesForWriting[6]  = S11_P13_2_FT01_PERC;
+            valuesForWriting[5]  = PoStrengthT03_T06_87PercAcn;
+            valuesForWriting[6]  = S11_T06_FT02_PERC;
             valuesForWriting[7]  = PoStrengthP03_87PercAcn;
             valuesForWriting[8]  = S13_P03_FT01_PERC;
-            valuesForWriting[9]  = PoStrengthD08_0PercAcn;
+            valuesForWriting[9]  = PoStrengthT03_T06_0PercAcn;
             valuesForWriting[10] = PoStrengthP03_0PercAcn;
+            valuesForWriting[11] = PoStrengthT06_D08_87PercAcn;
+            valuesForWriting[12] = PoStrengthT06_D08_0PercAcn;
+            valuesForWriting[13] = S11_P13_2_FT01_PERC;
 
             //........Добавить при необходимости
 
