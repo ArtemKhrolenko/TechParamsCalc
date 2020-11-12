@@ -460,6 +460,7 @@ namespace TechParamsCalc.Controllers
                         if (!item.IsInValid)
                         {
                             item.CalculateContent();
+
                         }
                     }
 
