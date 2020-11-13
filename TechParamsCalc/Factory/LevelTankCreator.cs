@@ -58,7 +58,7 @@ namespace TechParamsCalc.Factory
             LevelTankList = new List<LevelTank>();
             collection.ForEach(x =>
             {
-                var level = levelList.FirstOrDefault(l => l.TagName == x.TagName.Substring(0, Math.Max(x.TagName.IndexOf("_TANK"), 0)));
+                 var level = levelList.FirstOrDefault(l => l.TagName == x.TagName.Substring(0, Math.Max(x.TagName.IndexOf("_TANK"), 0)));
                 var density = level != null ? densityList.FirstOrDefault(d => d.TagName == level.TagName + "_DENS") : null;
 
                 if (level != null && density != null && nodeElementCollection.Any(ne => ne.Name == x.TagName))

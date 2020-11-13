@@ -48,6 +48,8 @@ namespace TechParamsCalc.DataBaseConnection.Level
             TankVolumeDictionary.Add(2, (v) => GetTypeTwoVolume(v)); //Расчет объема для типа сборника 2
             TankVolumeDictionary.Add(3, (v) => GetTypeThreeVolume(v)); //Расчет объема для типа сборника 3
             TankVolumeDictionary.Add(4, (v) => GetTypeFourVolume(v)); //Расчет объема для типа сборника 4
+            TankVolumeDictionary.Add(5, (v) => GetTypeFiveVolume(v)); //Расчет объема для типа сборника 5
+
 
 
         }
@@ -216,6 +218,79 @@ namespace TechParamsCalc.DataBaseConnection.Level
             var totalVolume = volumeLevel + Math.Max(0, volumeLeft);
 
             return totalVolume;
+        }
+
+        /// <summary>
+        /// Получение объема для типа сборника 5 - куб колонны со встроенным ребойлером
+        /// </summary>
+        /// <param name="levelmm"></param>
+        /// <returns></returns>
+        private double GetTypeFiveVolume(int levelmm)
+        {
+
+            //Радиус сбоника
+            var radius = dimB * 0.001 / 2.0;
+
+            //Общая высота сборника, включая эллиптическое днище
+            var totalLength = dimA + dimC;
+
+            //Расстояние до дна сборника для оценки неучтенного объема
+            //var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - (ltoDistanceA + (distanceB - distanceA)));
+            var levelFromSensorToBottomOfTheTank = Math.Max(0, totalLength - distanceB + ltoDistanceA);
+
+            //Метод для расчета объема цилиндра
+            double getSomeVolume(double level)
+            {
+                //Площадь круга
+                var s = radius * radius * Math.PI;
+
+                var volume = s * level;
+
+                return volume;
+            }
+
+            double volumeTotal = 0;
+
+            //Неучтенный объем жидкости под датчиком уровня            
+            volumeTotal += getSomeVolume(levelFromSensorToBottomOfTheTank * 0.001) * 0.85; //0.85 - поправка на эллиптическое днище
+
+            //Расстояние межжду нижней врезкой и нижним рорвандом встроенного ребойлера, мм
+            var distFromDistBToLowRorvand = Math.Max(0, distanceB - dimD - dimE);            
+
+            if (levelmm <= distFromDistBToLowRorvand)
+            {
+                volumeTotal += getSomeVolume(levelmm * 0.001);
+                return volumeTotal;
+            }
+
+            //Объем, включающий неучтенный под уровнем и участок под рорвандом
+            volumeTotal += getSomeVolume(distFromDistBToLowRorvand * 0.001);
+
+
+            //Расстояние межжду нижней врезкой и верхним рорвандом встроенного ребойлера, мм
+            var distFromDistBToHighRorwand = Math.Max(0, distFromDistBToLowRorvand + dimD);
+
+            //Полезный объем встроенного ребойлера колонны (с учетом объема трубок встроенного ребойлера)
+            var volumeOfReboilerWithoutTubes = Math.Max(0.0, getSomeVolume(dimD * 0.001) - dimF*0.001);       //Объем цилиндра ребойлера минус общий объем трубок ребойлера            
+
+            
+            if (levelmm > distFromDistBToLowRorvand && levelmm <= distFromDistBToHighRorwand)
+            {
+                volumeTotal += volumeOfReboilerWithoutTubes * (levelmm - distFromDistBToLowRorvand) / dimD;
+                return volumeTotal;
+            }
+
+            //Объем, включающий неучтенный под уровнем, участок под рорвандом и сам рорванд
+            volumeTotal += volumeOfReboilerWithoutTubes;
+
+            //Расчет общего объема, включающего участок над верхним рорвандом
+            var distFromHighRorwand = levelmm - distFromDistBToLowRorvand - dimD;
+
+            var volumeOfTopOfTank = getSomeVolume(distFromHighRorwand * 0.001);
+
+            volumeTotal += volumeOfTopOfTank;            
+
+            return volumeTotal;
         }
 
 
