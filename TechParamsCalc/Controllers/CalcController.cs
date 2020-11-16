@@ -498,7 +498,7 @@ namespace TechParamsCalc.Controllers
                     if (AtemtsCount >= maxAttemptsCount && reinitalizeClientEvent != null)
                     {
                         AtemtsCount = 0;
-                        reinitalizeClientEvent(this, new CustomEventArgs { ErrorMessage = "Реинициализация в цикле читения и расчета (5 попыток)" });
+                        reinitalizeClientEvent(this, new CustomEventArgs { ErrorMessage = "Реинициализация в цикле чтения и расчета (5 попыток)" });
                     }
 
                     IsInstanceActive = false;
