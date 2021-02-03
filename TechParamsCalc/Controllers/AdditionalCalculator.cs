@@ -353,7 +353,7 @@ namespace TechParamsCalc.Controllers
             if (S11_T06_FT02_DENS_ADD != null)
             {
                 S11_T06_FT02_DENS_ADD.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE);
-                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature);
+                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature);
             }
 
             return S11_T06_FT02_DENS_ADD != null && S11_T06_FT02_DENS_ADD2 != null;
@@ -369,7 +369,7 @@ namespace TechParamsCalc.Controllers
 
             if (temperature != null)
             {
-                S13_P03_FC01_DENS_ADD = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], temperature);
+                S13_P03_FC01_DENS_ADD = new Density(new string[] { "Water", "P", "ACN", "PO" }, new double[4], temperature);
                 S13_P03_FC01_DENS_ADD2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], temperature);
             }
 
@@ -416,12 +416,12 @@ namespace TechParamsCalc.Controllers
             while (true)
             {
                 //newDens = inputDensity.CalculateDensity();
-                if (GetExitCondition() || i++ > 2000)
+                if (GetExitCondition() || i++ > 10000)
                 {
                     POContent = inputDensity.PercArray[3];
                     break;
                 }
-                inputDensity.PercArray[3] += 0.05;                                                                                        //PO
+                inputDensity.PercArray[3] += 0.01;                                                                                        //PO
                 inputDensity.PercArray[1] = (100.0 - inputDensity.PercArray[3] - inputDensity.PercArray[2]) * acnContent * 0.01;          //ACN
                 inputDensity.PercArray[0] = 100.0 - inputDensity.PercArray[1] - inputDensity.PercArray[2] - inputDensity.PercArray[3];   //Water
                 newDens = inputDensity.CalculateDensity();
@@ -454,7 +454,7 @@ namespace TechParamsCalc.Controllers
             S11_T06_FT02_DENS_ADD.Temperature.Val_R = S11_T06_FT02_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
             
 
-            var t03_t06_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD2,  true);  //Содержание PO при 87% ACN в смеси ACN-Water
+            var t03_t06_strngth_87 = CalculateStrength(98.0, 2.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD2,  false);  //Содержание PO при 87% ACN в смеси ACN-Water
             var t03_t06_strngth_0  = CalculateStrength(50.0, 50.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 50% ACN и 50% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
 
             singleTagCreator.PoStrengthT03_T06_87PercAcn = (short)(t03_t06_strngth_87.Item1 * 100.0);
@@ -474,7 +474,7 @@ namespace TechParamsCalc.Controllers
             //6. Расчет крепости PO к сборнику 1.D08 от колонны 1.Т06;
             S11_P13_FT01_DENS_ADD.Temperature.Val_R = S11_P13_FT01_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
 
-            var t06_d08_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
+            var t06_d08_strngth_87 = CalculateStrength(37.0, 63.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
             var t06_d08_strngth_0  = CalculateStrength(100.0, 0.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD, false);  //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthT06_D08_87PercAcn = (short)(t06_d08_strngth_87.Item1 * 100.0);
