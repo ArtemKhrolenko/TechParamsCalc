@@ -476,8 +476,8 @@ namespace TechParamsCalc.Factory
             valuesForWriting[8]  = S13_P03_FT01_PERC;
             valuesForWriting[9]  = PoStrengthT03_T06_0PercAcn;
             valuesForWriting[10] = PoStrengthP03_0PercAcn;
-            valuesForWriting[11] = PoStrengthT06_D08_87PercAcn;
-            valuesForWriting[12] = PoStrengthT06_D08_0PercAcn;
+            valuesForWriting[11] = PoStrengthT06_D08_0PercAcn;
+            valuesForWriting[12] = PoStrengthT06_D08_87PercAcn;            
             valuesForWriting[13] = S11_P13_2_FT01_PERC;
 
             //........Добавить при необходимости

@@ -423,7 +423,7 @@ namespace TechParamsCalc.Controllers
                 }
                 inputDensity.PercArray[3] += 0.05;                                                                                        //PO
                 inputDensity.PercArray[1] = (100.0 - inputDensity.PercArray[3] - inputDensity.PercArray[2]) * acnContent * 0.01;          //ACN
-                inputDensity.PercArray[0] = 100.0 - inputDensity.PercArray[1] - inputDensity.PercArray[2] - inputDensity.PercArray[3];  //Water
+                inputDensity.PercArray[0] = 100.0 - inputDensity.PercArray[1] - inputDensity.PercArray[2] - inputDensity.PercArray[3];   //Water
                 newDens = inputDensity.CalculateDensity();
             }
             return (Math.Min(100.0, POContent), inputDensity.PercArray);
@@ -455,7 +455,7 @@ namespace TechParamsCalc.Controllers
             
 
             var t03_t06_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD2,  true);  //Содержание PO при 87% ACN в смеси ACN-Water
-            var t03_t06_strngth_0  = CalculateStrength(40.0, 60.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 40% ACN и 60% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
+            var t03_t06_strngth_0  = CalculateStrength(50.0, 50.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 50% ACN и 50% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
 
             singleTagCreator.PoStrengthT03_T06_87PercAcn = (short)(t03_t06_strngth_87.Item1 * 100.0);
             singleTagCreator.PoStrengthT03_T06_0PercAcn  = (short)(t03_t06_strngth_0.Item1 * 100.0);   
