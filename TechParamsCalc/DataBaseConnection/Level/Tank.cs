@@ -120,7 +120,7 @@ namespace TechParamsCalc.DataBaseConnection.Level
             double getSomeVolume(double level, double length)
             {
 
-                var alphaRadians = 2 * Math.Acos(1 - level / radius );
+                var alphaRadians = 2 * Math.Acos(Math.Max(1 - level / radius, -1.0));
 
                 var alpha = alphaRadians * 180.0 / Math.PI;
 
@@ -168,7 +168,7 @@ namespace TechParamsCalc.DataBaseConnection.Level
             double getSomeVolume(double level)
             { 
 
-                var alphaRadians = 2 * Math.Acos((dimD * 0.001 - radius) / radius);
+                var alphaRadians = 2 * Math.Acos(Math.Max((dimD * 0.001 - radius) / radius, -1.0));
 
                 var alpha = 360.0 - alphaRadians * 180.0 / Math.PI;              
 

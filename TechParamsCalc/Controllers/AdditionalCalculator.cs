@@ -344,16 +344,16 @@ namespace TechParamsCalc.Controllers
         #region Итеративный расчет содержания PO (общая функция)
 
         //Расчет крепости PO от колонны 1.Т03 к колонне 1.Т06
-        private Density S11_T06_FT02_DENS_ADD; 
+        private Density S11_T06_FT02_DENS_ADD;
         private Density S11_T06_FT02_DENS_ADD2;
 
         private bool InitalizePOPCalculations_T03_T06()
-        {            
+        {
             S11_T06_FT02_DENS_ADD = densityCreator.DensityList.FirstOrDefault(d => d.TagName == "S11_T03_AP03_DENS");
             if (S11_T06_FT02_DENS_ADD != null)
             {
                 S11_T06_FT02_DENS_ADD.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE);
-                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature);
+                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature); //Было "Water", "ACN", "P", "PO"
             }
 
             return S11_T06_FT02_DENS_ADD != null && S11_T06_FT02_DENS_ADD2 != null;
@@ -449,39 +449,39 @@ namespace TechParamsCalc.Controllers
             singleTagCreator.PeroxideMixRatio = (short)(Math.Min(ratioStrengthVar[0], 32.0) * 1000);
             singleTagCreator.AcnStrength = (short)(Math.Min(ratioStrengthVar[1], 100.0) * 100);
 
-            
+
             //4. Расчет крепости PO от колонны 1.Т03 к колонне 1.Т06
             S11_T06_FT02_DENS_ADD.Temperature.Val_R = S11_T06_FT02_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
-            
 
-            var t03_t06_strngth_87 = CalculateStrength(98.0, 2.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD2,  false);  //Содержание PO при 87% ACN в смеси ACN-Water
-            var t03_t06_strngth_0  = CalculateStrength(50.0, 50.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 50% ACN и 50% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
+
+            var t03_t06_strngth_87 = CalculateStrength(25.0, 75.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY - 7.5f, ref S11_T06_FT02_DENS_ADD2, true);  //Содержание PO при 87% ACN в смеси ACN-Water
+            var t03_t06_strngth_0 = CalculateStrength(50.0, 50.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 50% ACN и 50% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
 
             singleTagCreator.PoStrengthT03_T06_87PercAcn = (short)(t03_t06_strngth_87.Item1 * 100.0);
-            singleTagCreator.PoStrengthT03_T06_0PercAcn  = (short)(t03_t06_strngth_0.Item1 * 100.0);   
-            
-            singleTagCreator.S11_T06_FT02_PERC = t03_t06_strngth_0.Item2.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray(); 
+            singleTagCreator.PoStrengthT03_T06_0PercAcn = (short)(t03_t06_strngth_0.Item1 * 100.0);
+
+            singleTagCreator.S11_T06_FT02_PERC = t03_t06_strngth_0.Item2.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
 
             //5. Расчет крепости PO со склада на колонну 1.T01  
-                                                                                                                                                    //Не подставляем тег температуры т.к. температура уже входит в состав DENSITY S13_P03_FC01_DENS_ADD S13_P03_FC01_DENS_ADD как AI
+            //Не подставляем тег температуры т.к. температура уже входит в состав DENSITY S13_P03_FC01_DENS_ADD S13_P03_FC01_DENS_ADD как AI
             var p13_strngth_87 = CalculateStrength(13.0, 87.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS_ADD, true);        //Содержание PO при 87% ACN в смеси ACN-Water
-            var p13_strngth_0  = CalculateStrength(100, 0.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS_ADD, false);         //Содержание PO при 0% ACN в смеси ACN-Water
+            var p13_strngth_0 = CalculateStrength(100, 0.0, singleTagCreator.S13_P03_FT01_Mass_DENSITY, ref S13_P03_FC01_DENS_ADD, false);         //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthP03_87PercAcn = (short)(p13_strngth_87.Item1 * 100.0);
-            singleTagCreator.PoStrengthP03_0PercAcn  = (short)(p13_strngth_0.Item1 * 100.0);
-            singleTagCreator.S13_P03_FT01_PERC       = p13_strngth_0.Item2.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
+            singleTagCreator.PoStrengthP03_0PercAcn = (short)(p13_strngth_0.Item1 * 100.0);
+            singleTagCreator.S13_P03_FT01_PERC = p13_strngth_0.Item2.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
 
             //6. Расчет крепости PO к сборнику 1.D08 от колонны 1.Т06;
             S11_P13_FT01_DENS_ADD.Temperature.Val_R = S11_P13_FT01_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
 
-            var t06_d08_strngth_87 = CalculateStrength(37.0, 63.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
-            var t06_d08_strngth_0  = CalculateStrength(100.0, 0.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD, false);  //Содержание PO при 0% ACN в смеси ACN-Water
+            var t06_d08_strngth_87 = CalculateStrength(50.0, 50.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY + 0.7f, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
+            var t06_d08_strngth_0 = CalculateStrength(100.0, 0.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD, false);  //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthT06_D08_87PercAcn = (short)(t06_d08_strngth_87.Item1 * 100.0);
             singleTagCreator.PoStrengthT06_D08_0PercAcn = (short)(t06_d08_strngth_0.Item1 * 100.0);
 
             singleTagCreator.S11_P13_2_FT01_PERC = t06_d08_strngth_0.Item2.Select(a => (short)Math.Max(0, Math.Min(10000.0, a * 100.0))).ToArray();
-            
+
         }
     }
 }
