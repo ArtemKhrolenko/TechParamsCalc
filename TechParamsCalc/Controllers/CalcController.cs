@@ -457,7 +457,7 @@ namespace TechParamsCalc.Controllers
                     contentCreator.UpdateItemListFromOpc();
                     foreach (var item in (contentCreator as ContentCreator).ContentList)
                     {
-                        if (!item.IsInValid)
+                        if (!item.IsInValid && item.TagName.Contains("S11_T06_QC02"))
                         {
                             item.CalculateContent();
 
