@@ -23,7 +23,7 @@ namespace TechParamsCalc.Factory
         public short DeltaPR01 { get; set; }                    //Расчетная дельта к заданию давления реакции(см.AdditionalCalculator класс)
         public short PeroxideMixRatio { get; set; }             //Расчетное соотношение перекиси к реакционной смеси 1 для подержания точки азиотропы
         public short AcnStrength { get; set; }                  //Расчетная крепость ACN в колоне 1.Т01 по расходу 100% перекиси, вычисленной по заданному расходу перекиси на реакторы
-        
+
         public short PoStrengthT03_T06_87PercAcn { get; set; }  //Расчетная крепость PO от колонны 1.Т03 к 1.T06 (итеративный расчет) при 87% содержания ACN в смеси ACN-Water
         public short PoStrengthT03_T06_0PercAcn { get; set; }   //Расчетная крепость PO от колонны 1.Т03 к 1.T06 (итеративный расчет) при 0% содержания ACN в смеси ACN-Water
 
@@ -35,7 +35,7 @@ namespace TechParamsCalc.Factory
 
 
         public short[] S11_P13_2_FT01_PERC { get; set; }        //Расчетные проценты массового содержания компонентов в смеси после насоса 1.P13 в сборник 1.D08
-        
+
         public short[] S13_P03_FT01_PERC { get; set; }          //Расчетные проценты массового содержания компонентов в смеси S13_P03_FT01
 
 
@@ -66,7 +66,11 @@ namespace TechParamsCalc.Factory
         public float S13_P03_FT01_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO S13_P03_FC01
         public float S13_P03_FT01_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO со склада
         public float S11_T06_FT02_Mass_DENSITY { get; set; } //Плотность от массового расходомера PO в колонну 1.T06
+
         public float S11_T06_FT02_Mass_TEMPERATURE { get; set; } //Температура от массового расходомера PO в колонну 1.T06
+
+        public double S11_T06_AP01_START_WATER { get; set; } //% воды в смеси от колонны 1.Т06 к сборнику 1.D08
+        public double S11_T06_AP01_START_ALD { get; set; } //% альдегидов в смеси от колонны 1.Т06 к сборнику 1.D08
         #endregion
 
         //группа для записи переменных, которые должны писаться одновременно двумя серверами
@@ -207,6 +211,20 @@ namespace TechParamsCalc.Factory
                 {
                     ItemId = opcClient.ParentNodeDescriptor + "S11_T06_FT02_Mass.TEMPERATURE",
                     IsActive = true
+                },
+
+                //[17] % воды в смеси от колонны 1.Т06 к сборнику 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_T06_AP01_START_WATER",
+                    IsActive = true
+                },
+
+                //[18] % альдегидов в смеси от колонны 1.Т06 к сборнику 1.D08
+                new OpcDaItemDefinition
+                {
+                    ItemId = opcClient.ParentNodeDescriptor + "S11_T06_AP01_START_ALD",
+                    IsActive = true
                 }
 
 
@@ -307,12 +325,20 @@ namespace TechParamsCalc.Factory
                 if (singleValues[16].Error.Succeeded)
                     S11_T06_FT02_Mass_TEMPERATURE = (float)singleValues[16].Value;
 
+                //[17] % воды в смеси от колонны 1.Т06 к сборнику 1.D08
+                if (singleValues[17].Error.Succeeded)
+                    S11_T06_AP01_START_WATER = Convert.ToDouble(singleValues[17].Value);
+
+                //[18] % альдегидов в смеси от колонны 1.Т06 к сборнику 1.D08
+                if (singleValues[18].Error.Succeeded)
+                    S11_T06_AP01_START_ALD = Convert.ToDouble(singleValues[18].Value);
+
                 #endregion
             }
-            catch (Exception)
+            catch (Exception e)
             {
-               
-               
+
+
             }
         }
 
@@ -465,19 +491,19 @@ namespace TechParamsCalc.Factory
         //Запись асинхронной группы
         protected internal void WriteASyncItemToOPC()
         {
-            valuesForWriting[0]  = PropyleneMass;
-            valuesForWriting[1]  = DeltaPE06;
-            valuesForWriting[2]  = DeltaPR01;
-            valuesForWriting[3]  = PeroxideMixRatio;
-            valuesForWriting[4]  = AcnStrength;
-            valuesForWriting[5]  = PoStrengthT03_T06_87PercAcn;
-            valuesForWriting[6]  = S11_T06_FT02_PERC;
-            valuesForWriting[7]  = PoStrengthP03_87PercAcn;
-            valuesForWriting[8]  = S13_P03_FT01_PERC;
-            valuesForWriting[9]  = PoStrengthT03_T06_0PercAcn;
+            valuesForWriting[0] = PropyleneMass;
+            valuesForWriting[1] = DeltaPE06;
+            valuesForWriting[2] = DeltaPR01;
+            valuesForWriting[3] = PeroxideMixRatio;
+            valuesForWriting[4] = AcnStrength;
+            valuesForWriting[5] = PoStrengthT03_T06_87PercAcn;
+            valuesForWriting[6] = S11_T06_FT02_PERC;
+            valuesForWriting[7] = PoStrengthP03_87PercAcn;
+            valuesForWriting[8] = S13_P03_FT01_PERC;
+            valuesForWriting[9] = PoStrengthT03_T06_0PercAcn;
             valuesForWriting[10] = PoStrengthP03_0PercAcn;
             valuesForWriting[11] = PoStrengthT06_D08_0PercAcn;
-            valuesForWriting[12] = PoStrengthT06_D08_87PercAcn;            
+            valuesForWriting[12] = PoStrengthT06_D08_87PercAcn;
             valuesForWriting[13] = S11_P13_2_FT01_PERC;
 
             //........Добавить при необходимости

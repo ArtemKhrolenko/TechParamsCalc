@@ -353,7 +353,7 @@ namespace TechParamsCalc.Controllers
             if (S11_T06_FT02_DENS_ADD != null)
             {
                 S11_T06_FT02_DENS_ADD.Temperature = new Temperature("tmpTemp", singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE);
-                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "ACN", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature);
+                S11_T06_FT02_DENS_ADD2 = new Density(new string[] { "Water", "P", "P", "PO" }, new double[4], S11_T06_FT02_DENS_ADD.Temperature); //Было "Water", "ACN", "P", "PO"
             }
 
             return S11_T06_FT02_DENS_ADD != null && S11_T06_FT02_DENS_ADD2 != null;
@@ -454,7 +454,7 @@ namespace TechParamsCalc.Controllers
             S11_T06_FT02_DENS_ADD.Temperature.Val_R = S11_T06_FT02_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_T06_FT02_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
             
 
-            var t03_t06_strngth_87 = CalculateStrength(98.0, 2.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD2,  false);  //Содержание PO при 87% ACN в смеси ACN-Water
+            var t03_t06_strngth_87 = CalculateStrength(25.0, 75.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY - 7.5f, ref S11_T06_FT02_DENS_ADD2,  true);  //Содержание PO при 87% ACN в смеси ACN-Water
             var t03_t06_strngth_0  = CalculateStrength(50.0, 50.0, singleTagCreator.S11_T06_FT02_Mass_DENSITY, ref S11_T06_FT02_DENS_ADD, true);    //Содержание PO при 50% ACN и 50% альдегидов в смеси Water-альдегиды (вместо альдегидов подставленный P)
 
             singleTagCreator.PoStrengthT03_T06_87PercAcn = (short)(t03_t06_strngth_87.Item1 * 100.0);
@@ -474,7 +474,8 @@ namespace TechParamsCalc.Controllers
             //6. Расчет крепости PO к сборнику 1.D08 от колонны 1.Т06;
             S11_P13_FT01_DENS_ADD.Temperature.Val_R = S11_P13_FT01_DENS_ADD2.Temperature.Val_R = singleTagCreator.S11_P13_FT01_Mass_TEMPERATURE;    //При каждой итерации расчета читаем заново тег температуры
 
-            var t06_d08_strngth_87 = CalculateStrength(37.0, 63.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
+            //Было 13, 87 28.02.2021
+            var t06_d08_strngth_87 = CalculateStrength(singleTagCreator.S11_T06_AP01_START_WATER * 0.01, singleTagCreator.S11_T06_AP01_START_ALD * 0.01, singleTagCreator.S11_P13_FT01_Mass_DENSITY + 0.0f, ref S11_P13_FT01_DENS_ADD2, true);    //Содержание PO при 0% ACN в смеси ACN-Water
             var t06_d08_strngth_0  = CalculateStrength(100.0, 0.0, singleTagCreator.S11_P13_FT01_Mass_DENSITY, ref S11_P13_FT01_DENS_ADD, false);  //Содержание PO при 0% ACN в смеси ACN-Water
 
             singleTagCreator.PoStrengthT06_D08_87PercAcn = (short)(t06_d08_strngth_87.Item1 * 100.0);
