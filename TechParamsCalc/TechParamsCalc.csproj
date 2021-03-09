@@ -87,7 +87,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="TechDotNetLib">
-      <HintPath>D:\Khrolenko\C#\Libraries\TechDotNetLib_GIT\TechDotNetLib\bin\Debug\TechDotNetLib.dll</HintPath>
+      <HintPath>..\..\TechDotNet\TechDotNetLib\bin\Debug\TechDotNetLib.dll</HintPath>
     </Reference>
     <Reference Include="TitaniumAS.Opc.Client, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\TitaniumAS.Opc.Client.1.0.2.0\lib\net40\TitaniumAS.Opc.Client.dll</HintPath>
